@@ -18,3 +18,4 @@ reports/
 
 # Private planning notes (not for the public repo)
 BRIEF.md
+fixtures/runs/*/judge-cache.json

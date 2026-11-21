@@ -23,12 +23,12 @@ import { isCriticalFailure } from '../src/scoring/gate.js';
 // gate actually executes (after capture, when both run in one command).
 const { questions } = loadQuestions();
 
-let scored: (ReturnType<typeof scoreAndSave> & { runId: string; summaryFile: string }) | undefined;
-function gateRun() {
+let scored: (Awaited<ReturnType<typeof scoreAndSave>> & { runId: string; summaryFile: string }) | undefined;
+async function gateRun() {
   if (!scored) {
     const runId = latestRunId();
     const summaryFile = join(runDir(runId), 'summary.html');
-    const s = scoreAndSave(runId);
+    const s = await scoreAndSave(runId);
     writeFileSync(summaryFile, buildReport(runId));
     scored = { ...s, runId, summaryFile };
   }
@@ -37,7 +37,7 @@ function gateRun() {
 
 test.describe('ship/block gate', () => {
   test('summary report', async ({}, testInfo) => {
-    const { summaryFile, score, runId } = gateRun();
+    const { summaryFile, score, runId } = await gateRun();
     testInfo.annotations.push({ type: 'run', description: runId });
     await testInfo.attach('summary.html', { path: summaryFile, contentType: 'text/html' });
     testInfo.annotations.push({ type: 'stability', description: `${score.stable}/${score.total} questions stable (${score.pct}%)` });
@@ -45,7 +45,7 @@ test.describe('ship/block gate', () => {
 
   for (const q of questions) {
     test(`${q.id}`, { tag: [`@${q.severity}`, `@${q.topic}`, `@${q.shopper}`] }, async ({}, testInfo) => {
-      const runs = gateRun().results.filter((r) => r.questionId === q.id);
+      const runs = (await gateRun()).results.filter((r) => r.questionId === q.id);
       test.skip(runs.length === 0, 'not captured in this run');
       for (const r of runs) {
         if (r.outcome === 'pass') continue;

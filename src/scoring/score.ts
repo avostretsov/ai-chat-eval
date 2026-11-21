@@ -13,6 +13,13 @@ import { containsPhrase, normalize } from './normalize.js';
 export const VERDICTS = ['Correct', 'Partly', 'Wrong', 'Made up', 'Dodged', 'Needs review', 'Error'] as const;
 export type Verdict = (typeof VERDICTS)[number];
 
+export interface JudgeSuggestion {
+  verdict: Exclude<Verdict, 'Needs review' | 'Error'>;
+  reason: string;
+  /** e.g. "ollama/llama3.2:3b" */
+  by: string;
+}
+
 export interface CheckResult {
   verdict: Verdict;
   /** Pass = Correct. Fail = Partly, Wrong, Made up, Dodged, Error. Needs review = neither, until a human or the judge decides. */
@@ -26,9 +33,29 @@ export interface CheckResult {
   dodgePhrases: string[];
   /** One line a person can read in the report. */
   reason: string;
+  /** What an advisory judge suggested for a "Needs review" reply. */
+  judge?: JudgeSuggestion;
 }
 
 const factLabel = (f: Fact) => (Array.isArray(f) ? f[0] : f);
+
+/**
+ * Turn a judge verdict into a result, with the same severity rules as checks
+ * 1–3: Wrong / Made up take the question's severity, Partly is minor, Dodged major.
+ * Only used for replies the rules left as "Needs review".
+ */
+export function fromJudge(q: Question, rules: CheckResult, verdict: Exclude<Verdict, 'Needs review' | 'Error'>, reason: string): CheckResult {
+  const severity: Record<typeof verdict, Severity | undefined> = {
+    Correct: undefined, Partly: 'minor', Wrong: q.severity, 'Made up': q.severity, Dodged: 'major',
+  };
+  return {
+    ...rules,
+    verdict,
+    outcome: verdict === 'Correct' ? 'pass' : 'fail',
+    ...(severity[verdict] ? { severity: severity[verdict] } : { severity: undefined }),
+    reason: `Judge: ${reason}`,
+  };
+}
 
 export function scoreReply(
   q: Question,
@@ -75,4 +102,16 @@ export function scoreReply(
     return { ...r, verdict: 'Dodged', outcome: 'fail', severity: 'major', reason: `Dodged a published answer: ${quote(dodges)}` };
   // No fact, no false claim, no dodge: probably reworded. A person (or the judge) decides.
   return { ...r, verdict: 'Needs review', outcome: 'review', reason: `None of the facts matched: ${quote(factsMissing)}` };
+}
+
+/**
+ * Apply a judge answer to a reply the rules left as "Needs review".
+ * Advisory (default): the reply stays "Needs review" and carries the
+ * suggestion, so it never changes the pass rate or the gate.
+ * canBlock: the judge's verdict counts like a rule verdict.
+ */
+export function applyJudge(q: Question, rules: CheckResult, suggestion: JudgeSuggestion, canBlock: boolean): CheckResult {
+  if (rules.verdict !== 'Needs review') return rules; // rules always win
+  if (canBlock) return { ...fromJudge(q, rules, suggestion.verdict, suggestion.reason), judge: suggestion };
+  return { ...rules, judge: suggestion, reason: `${rules.reason}. Judge suggests ${suggestion.verdict}: ${suggestion.reason}` };
 }

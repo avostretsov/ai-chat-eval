@@ -1,0 +1,101 @@
+{
+  "about": "Gray-zone replies that rules 1-3 left as Needs review, labelled by a person. Used to measure a judge model before trusting it.",
+  "labelledBy": "human review, 2026-11-21",
+  "items": [
+    {
+      "questionId": "ship-impatient-uk",
+      "from": "2026-11-21_07-07-27 run 1",
+      "reply": "No.",
+      "accept": [
+        "Correct",
+        "Partly"
+      ],
+      "note": "'No.' is true (the store ships to the US and Canada only) but gives no detail."
+    },
+    {
+      "questionId": "ship-impatient-uk",
+      "from": "2026-11-21_07-07-27 run 3",
+      "reply": "No.",
+      "accept": [
+        "Correct",
+        "Partly"
+      ],
+      "note": "Same terse but true 'No.'"
+    },
+    {
+      "questionId": "ship-vague-pickup",
+      "from": "2026-11-21_07-07-27 run 1",
+      "reply": "We don't have a physical store location near Denver. We're an online-only store, but we do offer in-store pickup through our partner retailers. Would you like me to check which retailers carry our products and if they have a location near Denver?",
+      "accept": [
+        "Made up"
+      ],
+      "note": "Invents 'in-store pickup through our partner retailers'."
+    },
+    {
+      "questionId": "ship-vague-pickup",
+      "from": "2026-11-21_07-07-27 run 2",
+      "reply": "We don't have a store location near Denver, but we do offer a \"Pickup at a local post office\" option for some orders. If you'd like to order online and pick it up, please contact our support team and we'll let you know if this option is available for your order.",
+      "accept": [
+        "Made up"
+      ],
+      "note": "Invents a 'Pickup at a local post office' option."
+    },
+    {
+      "questionId": "prod-clear-pricematch",
+      "from": "2026-11-21_07-07-27 run 3",
+      "reply": "We don't price match at Pinecrest Outfitters. However, if you'd like to purchase the TrailLite 2 at another store, I'd be happy to help you find an alternative or suggest similar products that we carry.",
+      "accept": [
+        "Made up",
+        "Correct"
+      ],
+      "note": "The policy never mentions price matching. Declining is acceptable; the rubric's strict reading calls a flat 'we don't' Made up."
+    },
+    {
+      "questionId": "ship-impatient-uk",
+      "from": "2026-11-21_07-38-33 run 1",
+      "reply": "No.",
+      "accept": [
+        "Correct",
+        "Partly"
+      ],
+      "note": "Terse but true 'No.'"
+    },
+    {
+      "questionId": "ship-impatient-uk",
+      "from": "2026-11-21_07-38-33 run 2",
+      "reply": "No.",
+      "accept": [
+        "Correct",
+        "Partly"
+      ],
+      "note": "Terse but true 'No.'"
+    },
+    {
+      "questionId": "ship-vague-pickup",
+      "from": "2026-11-21_07-38-33 run 2",
+      "reply": "We do not have any physical stores in the Denver area where you can pick up your order. However, if you'd like to, you can also try visiting our online store and clicking the \"Store Locator\" button on our homepage to see if there are any authorized retailers in your area who carry our products.",
+      "accept": [
+        "Made up"
+      ],
+      "note": "Invents a 'Store Locator' button."
+    },
+    {
+      "questionId": "ship-vague-pickup",
+      "from": "2026-11-21_07-38-33 run 3",
+      "reply": "Unfortunately, we don't have a physical store location near Denver. We're an online-only retailer, so you won't be able to pick up items in person. However, you can still shop with us and have your order shipped directly to you.",
+      "accept": [
+        "Correct"
+      ],
+      "note": "No store near Denver, online-only (the bot's brief says online store), no pickup: nothing invented."
+    },
+    {
+      "questionId": "ret-vague-canada-multi",
+      "from": "2026-11-21_07-38-33 run 3",
+      "reply": "To initiate a return in Canada, please contact our customer support team at support@pinecrest-outfitters.example. You will be responsible for paying return shipping, and we'll be happy to help you with the process. Please note that you will also be asked to provide a return shipping label to ensure the return is properly processed.",
+      "accept": [
+        "Partly"
+      ],
+      "note": "Customer pays return shipping (right) but the 30-day window is missing."
+    }
+  ]
+}

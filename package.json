@@ -16,7 +16,8 @@
     "gate": "playwright test --project=gate --no-deps",
     "eval": "playwright test --project=capture --project=gate",
     "fixture": "tsx src/fixture.ts",
-    "golden": "tsx src/golden.ts"
+    "golden": "tsx src/golden.ts",
+    "judge:check": "tsx src/judge-check.ts"
   },
   "engines": {
     "node": ">=20"

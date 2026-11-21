@@ -19,7 +19,8 @@ for (const name of readdirSync(root).sort()) {
   const expectedFile = join(root, name, 'expected.json');
   if (!existsSync(expectedFile)) continue;
   const expected = JSON.parse(readFileSync(expectedFile, 'utf8')) as { decision: string; blocking: string[] };
-  const actual = gate(scoreRun(name));
+  // expected.json was reviewed with rules 1–3 only; the judge never runs here.
+  const actual = gate(await scoreRun(name, { judge: { provider: 'off', model: '' }, judgeCanBlock: false }));
   const want = [...expected.blocking].sort();
   const missing = want.filter((q) => !actual.blocking.includes(q));
   const extra = actual.blocking.filter((q) => !want.includes(q));

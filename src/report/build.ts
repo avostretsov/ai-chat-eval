@@ -111,7 +111,7 @@ export function buildReport(runId: string): string {
           .map(
             (r) => `<div class="run">
             <div class="run-head"><b>Run ${r.run}</b> <span class="chip ${VERDICT_CLASS[r.verdict]}">${esc(r.verdict)}</span>
-              ${r.severity ? `<span class="sev ${r.severity}">${r.severity}</span>` : ''} <span class="reason">${esc(r.reason)}</span></div>
+              ${r.severity ? `<span class="sev ${r.severity}">${r.severity}</span>` : ''}${r.decidedBy !== 'rules' ? ` <span class="chip review" title="${esc(r.decidedBy)}">⚖ judge</span>` : ''}${r.judge && r.decidedBy === 'rules' ? ` <span class="chip review" title="Advisory: ${esc(r.judge.by)}">⚖ suggests ${esc(r.judge.verdict)}</span>` : ''} <span class="reason">${esc(r.reason)}</span></div>
             <blockquote>${esc(r.reply)}</blockquote>
             ${r.screenshot && existsSync(join(dir, r.screenshot)) ? `<a href="${esc(r.screenshot)}" target="_blank">Screenshot</a>` : ''}
           </div>`,

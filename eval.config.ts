@@ -41,6 +41,12 @@ export const config = {
   judge: {
     provider: judge,
     model: judge === 'off' ? '' : process.env.JUDGE_MODEL || DEFAULT_MODELS[judge],
+    /**
+     * Advisory by default: a judge verdict is shown as a suggestion and the
+     * reply stays "Needs review". Set JUDGE_CAN_BLOCK=true only for a judge that
+     * passed `npm run judge:check`; then its verdicts count and can block.
+     */
+    canBlock: pick('JUDGE_CAN_BLOCK', ['true', 'false'] as const, 'false') === 'true',
   },
   target,
   targets: {

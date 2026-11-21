@@ -4,10 +4,11 @@
  * Re-scoring never asks the bot again.
  */
 import { join } from 'node:path';
-import { config } from '../eval.config.js';
+import { config, type JudgeName } from '../eval.config.js';
 import { loadQuestions } from './questions.js';
 import { latestRunId, readCaptures, runDir, writeJSON } from './runs.js';
-import { scoreReply, VERDICTS, type CheckResult } from './scoring/score.js';
+import { applyJudge, scoreReply, VERDICTS, type CheckResult } from './scoring/score.js';
+import { judgeCacheFile, judgeReply } from './judge/judge.js';
 import { stabilityByQuestion, stabilityScore } from './scoring/consistency.js';
 
 export interface ScoredReply extends CheckResult {
@@ -23,14 +24,35 @@ export interface ScoredReply extends CheckResult {
   decidedBy: string;
 }
 
-export function scoreRun(runId: string): ScoredReply[] {
+export interface ScoreOptions {
+  /** Which judge to ask about "Needs review" replies. Default: the JUDGE setting. */
+  judge?: { provider: JudgeName; model: string };
+  /** Let judge verdicts count (and block). Default: the JUDGE_CAN_BLOCK setting. */
+  judgeCanBlock?: boolean;
+}
+
+export async function scoreRun(runId: string, opts: ScoreOptions = {}): Promise<ScoredReply[]> {
   const set = loadQuestions();
+  const judge = opts.judge ?? config.judge;
+  const cacheFile = judgeCacheFile(runDir(runId));
   const byId = new Map(set.questions.map((q) => [q.id, q]));
   const results: ScoredReply[] = [];
   for (const c of readCaptures(runId)) {
     const q = byId.get(c.questionId);
     if (!q) continue; // question removed from the file since this run
-    const r = scoreReply(q, c.reply, set.dodge_phrases, { error: c.error });
+    let r = scoreReply(q, c.reply, set.dodge_phrases, { error: c.error });
+    let decidedBy = 'rules';
+    // Check 4: only for replies the rules could not decide. Rules always win.
+    if (r.verdict === 'Needs review' && judge.provider !== 'off') {
+      const j = await judgeReply(q, c.reply, { provider: judge.provider, model: judge.model, cacheFile });
+      if (j) {
+        const canBlock = opts.judgeCanBlock ?? config.judge.canBlock;
+        r = applyJudge(q, r, { ...j, by: `${judge.provider}/${judge.model}` }, canBlock);
+        if (canBlock) decidedBy = `judge:${judge.provider}/${judge.model}`;
+      } else {
+        r = { ...r, reason: `${r.reason} (judge gave no valid answer)` };
+      }
+    }
     results.push({
       ...r,
       questionId: q.id,
@@ -41,7 +63,7 @@ export function scoreRun(runId: string): ScoredReply[] {
       ...(q.trap ? { trap: q.trap } : {}),
       reply: c.reply,
       screenshot: c.screenshot,
-      decidedBy: 'rules',
+      decidedBy,
     });
   }
   const order = new Map(set.questions.map((q, i) => [q.id, i]));
@@ -49,14 +71,15 @@ export function scoreRun(runId: string): ScoredReply[] {
 }
 
 /** Score a run, add stability, and save runs/<id>/results.json. */
-export function scoreAndSave(runId: string) {
-  const results = scoreRun(runId);
+export async function scoreAndSave(runId: string, opts: ScoreOptions = {}) {
+  const results = await scoreRun(runId, opts);
   if (!results.length) throw new Error(`Run ${runId} has no captured replies.`);
   const stability = stabilityByQuestion(results);
   const score = stabilityScore(stability);
+  const judge = opts.judge ?? config.judge;
   writeJSON(join(runDir(runId), 'results.json'), {
     runId,
-    judge: config.judge.provider,
+    judge: judge.provider === 'off' ? 'off' : `${judge.provider}/${judge.model} (${(opts.judgeCanBlock ?? config.judge.canBlock) ? 'can block' : 'advisory'})`,
     scoredAt: new Date().toISOString(),
     stabilityScore: score,
     stability,
@@ -67,13 +90,14 @@ export function scoreAndSave(runId: string) {
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   const runId = latestRunId();
-  const { results, stability, score } = scoreAndSave(runId);
+  const { results, stability, score } = await scoreAndSave(runId);
 
   const clip = (s: string, n: number) => (s.length > n ? s.slice(0, n - 1) + '…' : s.padEnd(n));
-  console.log(`Run ${runId} · judge: ${config.judge.provider} · ${results.length} replies\n`);
+  console.log(`Run ${runId} · judge: ${config.judge.provider === 'off' ? 'off' : `${config.judge.provider}/${config.judge.model}`} · ${results.length} replies (⚖ = decided by the judge, ?⚖ = judge suggestion only)\n`);
   for (const r of results) {
     const sev = r.severity ? `[${r.severity}]` : '';
-    console.log(`${clip(`${r.questionId} #${r.run}`, 30)} ${clip(r.verdict, 13)} ${clip(sev, 11)} ${r.reason}`);
+    const by = r.decidedBy !== 'rules' ? ' ⚖' : r.judge ? ' ?⚖' : '';
+    console.log(`${clip(`${r.questionId} #${r.run}`, 30)} ${clip(r.verdict + by, 16)} ${clip(sev, 11)} ${r.reason}`);
   }
   const count = (v: string) => results.filter((r) => r.verdict === v).length;
   const decided = results.filter((r) => r.outcome !== 'review');

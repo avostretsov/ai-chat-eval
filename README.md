@@ -27,9 +27,9 @@ The same question gets a differently worded answer every time, so `expect(reply)
 | 1. Must contain | Required facts, after normalizing numbers and text ("fifty dollars" = "$50.00" = `$50`; "5–10" = `5-10`) | Free shipping reply must say `$50` |
 | 2. Must not contain | Claims that contradict the policy (**Wrong**) or have no basis in it (**Made up**) | `$35`, `1-800-555-0199`, "match or beat the price" |
 | 3. Dodge detection | "I don't have that information" when the answer is published | **Dodged** |
-| 4. LLM judge *(optional)* | Rewordings that rules 1–3 can't decide | Planned: `JUDGE=ollama` |
+| 4. LLM judge *(optional)* | Rewordings that rules 1–3 can't decide | `JUDGE=ollama`: suggests a verdict for **Needs review** replies |
 
-With the judge `off`, a reply the rules can't decide is marked **Needs review** for a person, never guessed. Verdicts: **Correct · Partly · Wrong · Made up · Dodged · Needs review**.
+A reply the rules can't decide is marked **Needs review** for a person, never guessed. The judge only looks at those, and a rule verdict is never overridden. Verdicts: **Correct · Partly · Wrong · Made up · Dodged · Needs review**.
 
 **Severity** (from the question file): **critical** = a wrong or made-up promise about money or policy (blocks the release) · **major** = dodges or contradicts a published answer · **minor** = missing detail.
 
@@ -51,6 +51,19 @@ With the judge `off`, a reply the rules can't decide is marked **Needs review** 
 | A 15% restocking fee, only for vague shoppers | 0 of 6 targeted replies in this run. In an earlier run it fired once, on an *impatient* question instead (Made up). A 3B model follows "only when vague" loosely. |
 
 **It also caught errors nobody planted.** The bot said *"Yes, we price match… we'll refund the difference"* (made up; the trap-free bot did it in 2 of 3 runs too), invented in-store pickup *"through partner retailers"*, and offered a Canadian shopper the US-only prepaid return label. That last one blocks even the trap-free bot: a 3B model on a laptop is not shippable, and the gate says so.
+
+## Testing the judge before trusting it
+
+An LLM judge is itself a model that can be wrong, so it is measured before it is trusted. [fixtures/judge/calibration.json](fixtures/judge/calibration.json) holds the 10 gray-zone replies from the runs above, each labelled by a person with a reason; `npm run judge:check` scores any judge model against them.
+
+| Judge (local, $0) | Verdict matches the person | Pass/fail matches | False blocks |
+|---|---|---|---|
+| llama3.2:3b | 0 / 10 | 4 / 10 | 5 |
+| qwen2.5:3b | 0 / 10 | 4 / 10 | 5 |
+
+Both 3B models return valid JSON every time but can't apply the rubric: both marked a true *"No."* to *"ship to UK?? yes or no"* as **Wrong** (qwen's own reason: *"we do not ship to the uk"*), and both called invented pickup options **Dodged** instead of **Made up**. Five of those verdicts would have blocked a release that should not be blocked.
+
+So the judge is **advisory by default**: its verdict is shown as a suggestion (⚖ in the report), the reply stays *Needs review*, and only the rules can block. `JUDGE_CAN_BLOCK=true` lets a judge's verdicts count, for a judge that has passed `judge:check` (for example a paid model). The rubric is in [src/judge/rubric.md](src/judge/rubric.md), answers are cached, and the judge runs at temperature 0, so results are reproducible.
 
 ## Run it
 
@@ -77,6 +90,7 @@ npm run report       # runs/<id>/summary.html: heatmap, stability, every reply
 | `npm run questions` | Validate the question file and print the topic × shopper grid |
 | `npm run test:unit` | Unit tests: normalizing, checks 1–3, stability, the gate rule |
 | `npm run golden` | The gate must block exactly the reviewed questions on recorded runs |
+| `npm run judge:check` | Measure a judge model against human-labelled replies |
 | `npm run report:png` | Save the heatmap image for this README |
 
 ## Provider-agnostic: everything is a setting
@@ -87,6 +101,7 @@ All settings live in `.env` ([.env.example](.env.example)) and [eval.config.ts](
 |---|---|---|
 | `PROVIDER` / `MODEL` | `ollama` · `claude` · `openai` | `ollama` / `llama3.2:3b` |
 | `JUDGE` / `JUDGE_MODEL` | `off` · `ollama` · `claude` · `openai` | `off` |
+| `JUDGE_CAN_BLOCK` | `false`: judge only suggests · `true`: judge verdicts count and can block | `false` |
 | `TARGET` | `local` (this repo's test store) · `shopify` (Weekend 2) | `local` |
 | `TRAPS` | `on` · `off`: plant the three traps in the test bot | `on` |
 | `REPEATS` | runs per question for stability testing | `3` |
@@ -105,10 +120,11 @@ questions/           pass rules: 22 questions × topic × shopper type, written 
 src/providers/       one chat() for Ollama, Claude, OpenAI: used by the bot and the judge
 src/targets/         how to open a chat and ask on each target site (local now, Shopify next)
 src/scoring/         normalize → checks 1–3 → verdict; stability; the ship/block rule
+src/judge/           check 4: rubric, judge call, judge:check against human labels
 src/report/          summary page with the heatmap
 tests/capture.spec   ask and save evidence, one fresh browser context per question and run
 tests/gate.spec      one test per question: fails on any critical failure
-tests/unit/          29 unit tests, no browser or model
+tests/unit/          37 unit tests, no browser or model (the judge uses a fake model)
 ```
 
 Capturing and scoring are separate steps: replies are saved once and can be rescored with new rules (or the judge) without asking the bot again.
@@ -117,12 +133,12 @@ Capturing and scoring are separate steps: replies are saved once and can be resc
 
 ## Limits (honest ones)
 
-- **Keyword rules can't read context.** *"You'll receive a prepaid return label for your US orders, but for Canadian orders…"* matches the forbidden phrase "prepaid return label" in a correct sentence. That gray zone is what the optional LLM judge is for.
+- **Keyword rules can't read context.** *"You'll receive a prepaid return label for your US orders, but for Canadian orders…"* matches the forbidden phrase "prepaid return label" in a correct sentence. That gray zone is what the judge is for, and the free local judges are not good enough to settle it (see above).
 - **A 3B model on a laptop CPU** is a deliberately weak bot: good for proving the harness catches errors, not a benchmark of any product.
 - **Needs review** replies are excluded from the pass rate and listed for a person.
 
 ## Next: Weekend 2
 
-`TARGET=shopify`: the same specs against a free Shopify development store with a free-tier AI chat app: a real widget, iframes, slower replies and rate limits, with results compared side by side with the local store. Then the optional `JUDGE=ollama` for the *Needs review* replies.
+`TARGET=shopify`: the same specs against a free Shopify development store with a free-tier AI chat app: a real widget, iframes, slower replies and rate limits, with results compared side by side with the local store.
 
 **Testing rule:** this harness is only pointed at chats we control or have **written permission** to test.
