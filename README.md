@@ -4,9 +4,9 @@
 
 Tested on two targets: a local bot with planted traps, and a real Shopify store's AI chat app. Runs at **$0** by default: the local bot and the optional judge run on a local [Ollama](https://ollama.com) model. The model, the judge and the target site are settings, not code.
 
-![Pass-rate heatmap: topic × shopper type](docs/heatmap.png)
+![Report summary: NO-GO, score tiles, top failures and the pass-rate heatmap (topic × shopper type)](docs/heatmap.png)
 
-*One run against the local test store with three planted traps: 22 questions × 3 runs. The gate says BLOCK: the bot promised free shipping at $35 (the policy says $50) and gave out a phone number the store does not have.*
+*The top of the report for one run against the local test store with three planted traps (22 questions × 3 runs). It says NO-GO in plain words and lists the top failures: the bot promised free shipping at $35 (the policy says $50) and gave out a phone number the store does not have.*
 
 ---
 
