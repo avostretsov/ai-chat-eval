@@ -4,13 +4,24 @@
 
 Tested on two targets: a local bot with planted traps, and a real Shopify store's AI chat app. Runs at **$0** by default: the local bot and the optional judge run on a local [Ollama](https://ollama.com) model. The model, the judge and the target site are settings, not code.
 
-![Report summary: NO-GO, score tiles, top failures and the pass-rate heatmap (topic × shopper type)](docs/heatmap.png)
+![Demo: a shopper asks the local test store's AI chat about free shipping, the bot answers $35 while the policy says $50, and the report opens on NO-GO with the top failures](docs/demo.gif)
 
-*The top of the report for one run against the local test store with three planted traps (22 questions × 3 runs). It says NO-GO in plain words and lists the top failures: the bot promised free shipping at $35 (the policy says $50) and gave out a phone number the store does not have.*
+*A shopper asks the test store's AI chat about free shipping. The bot says $35; the published policy says $50. The harness checks every reply against the answer key and blocks the release. (22 s; the wait for the bot's reply is shortened.)*
 
 ---
 
 ## What it does
+
+```mermaid
+flowchart LR
+    Q["Question file<br/>22 questions + pass rules,<br/>written before the first run"] --> A
+    T["Target: local test bot<br/>or a Shopify store's AI chat"] --> A
+    A["Ask the chat<br/>Playwright, fresh browser,<br/>each question 3×"] --> C
+    C["Check each reply<br/>required facts<br/>forbidden claims · dodges<br/>optional LLM judge"] --> G{"Any critical<br/>failure?"}
+    G -- "yes" --> B["NO-GO<br/>the build fails"]
+    G -- "no" --> S["GO"]
+    C --> R["Report<br/>top failures<br/>heatmap · stability"]
+```
 
 1. **Opens the chat in a fresh browser context** for every question, asks it (single questions and 3 multi-turn chats such as *"…I'm in Canada though"*), and saves the reply text and a screenshot.
 2. **Scores each reply against pass rules** written before the first run ([questions/pinecrest.yaml](questions/pinecrest.yaml)): required facts, forbidden claims, severity and a source link for each question.
@@ -34,6 +45,10 @@ A reply the rules can't decide is marked **Needs review** for a person, never gu
 **Severity** (from the question file): **critical** = a wrong or made-up promise about money or policy (blocks the release) · **major** = dodges or contradicts a published answer · **minor** = missing detail.
 
 ## Results on the local test store (llama3.2:3b, judge off)
+
+![Report summary: NO-GO, score tiles, top failures and the pass-rate heatmap (topic × shopper type)](docs/heatmap.png)
+
+*The top of the report for one run against the local test store with three planted traps (22 questions × 3 runs). It says NO-GO in plain words and lists the top failures: the bot promised free shipping at $35 (the policy says $50) and gave out a phone number the store does not have.*
 
 | | Bot with planted traps | Same bot, traps off |
 |---|---|---|
