@@ -13,7 +13,7 @@ import type { Question } from '../../src/questions.js';
 const pickup: Question = {
   id: 'ship-vague-pickup', topic: 'shipping', shopper: 'vague', severity: 'major', source: '/policy#contact',
   turns: ['is there a store near denver where i can just pick it up?'],
-  must_contain: [], must_not_contain: [], made_up: ['our denver store'], answerable: false,
+  must_contain: [], must_not_contain: [], made_up: ['our denver store'], answerable: false, declines: [],
 };
 const reply = "We don't have a store near Denver, but we offer in-store pickup through our partner retailers.";
 

@@ -28,6 +28,11 @@ export interface Question {
   /** Claims with no basis in the policy: a hit scores "Made up". */
   made_up: string[];
   answerable: boolean;
+  /**
+   * Unanswerable questions only: wordings of a plain "no" that promise nothing
+   * ("we do not offer price matching"). A hit counts as declining, so Correct.
+   */
+  declines: string[];
   trap?: string;
 }
 
@@ -69,9 +74,12 @@ export function loadQuestions(file: string | URL = process.env.QUESTIONS ?? DEFA
       err(id, 'must_contain entries must be strings or non-empty lists of strings');
     if (!Array.isArray(mustNot) || !mustNot.every(isStr)) err(id, 'must_not_contain must be a list of strings');
     const answerable = q.answerable ?? true;
+    const declines = q.declines ?? [];
+    if (!Array.isArray(declines) || !declines.every(isStr)) err(id, 'declines must be a list of strings');
+    if (answerable && declines.length) err(id, 'declines is only for unanswerable questions (answerable: false)');
     if (answerable && must.length === 0) err(id, 'an answerable question needs at least one required fact');
     if (!answerable && mustNot.length + madeUp.length === 0) err(id, 'an unanswerable question needs made_up claims to catch invented answers');
-    return { ...q, must_contain: must, must_not_contain: mustNot, made_up: madeUp, answerable };
+    return { ...q, must_contain: must, must_not_contain: mustNot, made_up: madeUp, answerable, declines };
   });
 
   if (errors.length) throw new Error(`Invalid question file:\n  - ${errors.join('\n  - ')}`);

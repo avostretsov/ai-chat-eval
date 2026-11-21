@@ -33,6 +33,8 @@ export const ZOPI = {
 
 /** How long the reply text must stay unchanged before it counts as finished. */
 const SETTLE_MS = Number(process.env.REPLY_SETTLE_MS ?? 2_000);
+/** Extra quiet time to catch a second bot message ("allow me a moment" → answer). */
+const FOLLOWUP_MS = Number(process.env.REPLY_FOLLOWUP_MS ?? 3_000);
 
 /** Get past the dev-store password page, if it is shown. */
 export async function unlockStorefront(page: Page, password: string) {
@@ -94,17 +96,24 @@ export const shopifyZopi: ChatTarget = {
       throw new ChatError(`No reply within ${REPLY_TIMEOUT_MS / 1000} s`);
     });
 
-    // Streaming: done when nothing shows "busy" and the text has not changed for SETTLE_MS.
+    // Done when nothing shows "busy", the text has not changed for SETTLE_MS,
+    // and no further bot message arrived for FOLLOWUP_MS more: the bot can send
+    // "Please allow me a moment…" first and the answer as a second message.
+    // Everything it sent after the question is the reply, joined.
+    const quietMs = SETTLE_MS + FOLLOWUP_MS;
     const deadline = Date.now() + REPLY_TIMEOUT_MS;
     let last = '';
-    let stableSince = Date.now();
+    let quietSince = Date.now();
     while (Date.now() < deadline) {
-      const now = await replyText(page, before);
+      const count = await rows.count();
+      const parts: string[] = [];
+      for (let i = before; i < count; i++) parts.push(await replyText(page, i));
+      const now = parts.filter(Boolean).join('\n\n');
       const busy = await page.locator(ZOPI.busy).filter({ visible: true }).count();
       if (now !== last || busy) {
         last = now;
-        stableSince = Date.now();
-      } else if (now && Date.now() - stableSince >= SETTLE_MS) {
+        quietSince = Date.now();
+      } else if (now && Date.now() - quietSince >= quietMs) {
         return now;
       }
       await page.waitForTimeout(250);

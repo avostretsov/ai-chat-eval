@@ -61,8 +61,15 @@ customElements.define('zopi-chat-widget', class extends HTMLElement {
     await sleep(800);
     m.querySelector('.zopi-typing-bubble').remove();
     m.insertAdjacentHTML('beforeend', '<div class="zopi-msg-row assistant ai"><span class="zopi-avatar">A</span><div class="zopi-msg-col"><span class="zopi-name">AI</span><div class="zopi-msg assistant ai"><p></p></div><time class="zopi-msg-time">10:19 AM</time></div></div>');
-    const bubble = m.lastElementChild.querySelector('.zopi-msg.assistant');
-    const p = bubble.querySelector('p');
+    let bubble = m.lastElementChild.querySelector('.zopi-msg.assistant');
+    let p = bubble.querySelector('p');
+    if (/return window/i.test(text)) {
+      // Seen on the live widget: a holding message first, the answer as a second message.
+      p.textContent = 'Please allow me a moment to retrieve the specific details for you.';
+      await sleep(2500); // longer than the 2 s settle time, shorter than settle + follow-up
+      m.insertAdjacentHTML('beforeend', '<div class="zopi-msg-row assistant ai"><div class="zopi-msg-col"><div class="zopi-msg assistant ai"><p>You can return items within 30 days of delivery.</p></div></div></div>');
+      return;
+    }
     const answer = /shipping/i.test(text)
       ? 'We offer free standard shipping on US orders over $50. || Orders under $50 pay $6.95.'
       : /backpack/i.test(text) ? 'The Summit 45 backpack holds 45 liters.' : 'Mock answer to: ' + text;

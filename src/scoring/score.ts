@@ -88,7 +88,9 @@ export function scoreReply(
 
   if (!q.answerable) {
     // Not covered by the policy: declining or pointing to support is right.
-    const referred = dodges.length > 0 || containsPhrase(text, 'support@pinecrest-outfitters.example') || containsPhrase(text, 'email');
+    // Made-up claims were checked above, so a plain "no" here promises nothing.
+    const declined = q.declines.some((p) => containsPhrase(text, p));
+    const referred = declined || dodges.length > 0 || containsPhrase(text, 'support@pinecrest-outfitters.example') || containsPhrase(text, 'email');
     return referred
       ? { ...r, verdict: 'Correct', outcome: 'pass', reason: 'Not in the policy; the bot declined or referred to support' }
       : { ...r, verdict: 'Needs review', outcome: 'review', reason: 'Not in the policy, and the reply neither declined nor matched a known invention' };

@@ -14,7 +14,7 @@ const DODGES = ["i don't have that information", 'please log in'];
 function q(over: Partial<Question>): Question {
   return {
     id: 't', topic: 'shipping', shopper: 'clear', severity: 'critical', source: '/policy',
-    turns: ['?'], must_contain: [], must_not_contain: [], made_up: [], answerable: true, ...over,
+    turns: ['?'], must_contain: [], must_not_contain: [], made_up: [], answerable: true, declines: [], ...over,
   };
 }
 
@@ -88,6 +88,12 @@ test.describe('scoreReply verdicts', () => {
     const pm = q({ answerable: false, made_up: ['match or beat'] });
     expect(scoreReply(pm, 'Our policy does not cover that. Please email support@pinecrest-outfitters.example.', DODGES).verdict).toBe('Correct');
     expect(scoreReply(pm, "We'll match or beat the price!", DODGES).verdict).toBe('Made up');
+  });
+  test('unanswerable: a plain "no" from the declines list is Correct, unless it also invents', () => {
+    const pm = q({ answerable: false, made_up: ['match or beat'], declines: ['not offer price matching'] });
+    expect(scoreReply(pm, 'We do not offer price matching for items at other stores.', DODGES).verdict).toBe('Correct');
+    expect(scoreReply(pm, "We don't offer price matching, but we'll match or beat it this time!", DODGES).verdict).toBe('Made up');
+    expect(scoreReply(pm, 'Price matching? Great question about our pricing.', DODGES).verdict).toBe('Needs review');
   });
   test('Error: the chat failed', () => {
     expect(scoreReply(ship, '', DODGES, { error: 'timeout' }).verdict).toBe('Error');

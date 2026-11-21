@@ -16,6 +16,9 @@
 #                    ("I don't have that information") is a failure.
 #                    false = the policy does not cover it; the right move is to
 #                    say so and point to support, and any invented answer is "Made up".
+# declines:          unanswerable questions only: wordings of a plain "no" that
+#                    promise nothing ("we do not offer price matching"). A hit
+#                    counts as declining (Correct), unless a made_up claim also hits.
 # turns:             one message = single question. Several = a multi-turn chat;
 #                    the rules check the LAST reply (the earlier turns set context).
 # trap:              which planted trap (app/bot-prompt.ts) this question should catch.
@@ -57,6 +60,23 @@
 #   prod-vague-jacket  + "machine washed" ("can be machine washed on a gentle cycle")
 #   ret-clear-window   + "cover the cost of return shipping", "won't need to pay"
 #                      ("In the US, we cover the cost of return shipping")
+# 2026-11-21  First Shopify run (2026-11-21_18-58-56_baseline, Zopi AI Chatbot,
+#             3 repeats) left 13 replies as Needs review and 3 as Partly. Each
+#             was read by a person. No fact, forbidden claim or severity changed.
+#   dodge_phrases  + "care label", "do not have specific",
+#                  "connect you with a human", "allow me a moment". Zopi said
+#                  "I recommend checking the care label" for a published care fact, offered a
+#                  human agent instead of the support email, and once replied only
+#                  "Please allow me a moment to retrieve the specific details".
+#                  These are now Dodged (major) on answerable questions.
+#   ret-vague-canada-multi  accepted: + "responsibility of the customer",
+#                  "responsible for the shipping costs" ("return shipping costs
+#                  are the responsibility of the customer"): correct, unmatched.
+#   prod-impatient-backpack accepted: + "16 and 21" ("between 16 and 21 inches").
+#   ship-vague-pickup, prod-clear-pricematch  new field `declines`: a plain "no"
+#                  ("operates as an online store", "we do not offer price
+#                  matching") is a correct answer to a question the policy does
+#                  not cover, as long as no made_up claim appears.
 
 version: 1
 store: Pinecrest Outfitters
@@ -81,6 +101,10 @@ dodge_phrases:
   - "log in to your account to see"
   - "contact our support team for"
   - "please reach out to support"
+  - "care label"
+  - "do not have specific"
+  - "connect you with a human"
+  - "allow me a moment"
 
 questions:
   # ───────────────────────────── SHIPPING ─────────────────────────────
@@ -154,6 +178,12 @@ questions:
       - "visit our store"
       - "in-store pickup is available"
       - "located at"
+    declines:
+      - "does not have a physical"
+      - "do not have a physical"
+      - "not currently have a physical"
+      - "operates online"
+      - "operates as an online store"
 
   - id: ship-clear-canada-multi
     topic: shipping
@@ -228,7 +258,7 @@ questions:
       - "i'm in canada though"
     must_contain:
       - "30 days"
-      - ["pay for return shipping", "pay the return shipping", "pay for the return shipping", "responsible for return shipping", "responsible for the return shipping","cover return shipping", "cover the return shipping", "at your own expense", "at your own cost", "you pay"]
+      - ["pay for return shipping", "pay the return shipping", "pay for the return shipping", "responsible for return shipping", "responsible for the return shipping", "responsibility of the customer", "responsible for the shipping costs", "cover return shipping", "cover the return shipping", "at your own expense", "at your own cost", "you pay"]
     must_not_contain:
       - "prepaid return label"
       - "free return label"
@@ -313,7 +343,7 @@ questions:
       - "summit 45 price + what torso does it fit"
     must_contain:
       - "$179"
-      - ["16-21", "16 to 21"]
+      - ["16-21", "16 to 21", "16 and 21"]
 
   - id: prod-vague-jacket
     topic: products
@@ -348,6 +378,12 @@ questions:
       - "beat the price"
       - "beat it"
       - "match the price"
+    declines:
+      - "not offer price matching"
+      - "not currently offer a price matching"
+      - "not have a price match"
+      - "not currently have a price match"
+      - "do not price match"
 
   # ─────────────────────────── SUBSCRIPTIONS ───────────────────────────
   - id: sub-clear-cancel

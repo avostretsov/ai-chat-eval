@@ -40,6 +40,13 @@ test('multi-turn: each ask returns its own reply', async ({ page }) => {
   expect(await shopifyZopi.ask(page, 'and shipping?')).toContain('$50');
 });
 
+test('waits for a second message and joins it ("allow me a moment" → answer)', async ({ page }) => {
+  await serveMockStore(page, password, { autoSend: false });
+  await shopifyZopi.open(page);
+  const reply = await shopifyZopi.ask(page, 'return window. now.');
+  expect(reply).toBe('Please allow me a moment to retrieve the specific details for you.\n\nYou can return items within 30 days of delivery.');
+});
+
 test('refuses a chat that already had a question sent for us', async ({ page }) => {
   await serveMockStore(page, password, { autoSend: true });
   await expect(shopifyZopi.open(page)).rejects.toThrow(/already had 1 shopper/);
