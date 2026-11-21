@@ -1,23 +1,16 @@
 /**
  * Target adapter: how to open a chat and ask a question on a given site.
- * Specs only call open() and ask(), so adding Option B (a Shopify widget with
- * iframes and slow replies) in Weekend 2 means adding one target here.
+ * Specs only call open() and ask(), so a new site means one new target here,
+ * with no change to the questions, the scoring or the gate.
+ *
+ *   local    Option A: this repo's chat page (app/), a local Ollama model
+ *   shopify  Option B: a Shopify dev store with the Zopi AI Chatbot app (zopi.ts)
  */
-import type { Page } from '@playwright/test';
 import { config, type TargetName } from '../../eval.config.js';
+import { ChatError, REPLY_TIMEOUT_MS, type ChatTarget } from './types.js';
+import { shopifyZopi } from './zopi.js';
 
-export interface ChatTarget {
-  name: TargetName;
-  /** Load the page and get the chat ready for the first message. */
-  open(page: Page): Promise<void>;
-  /** Send one message and return the assistant's reply text. */
-  ask(page: Page, text: string): Promise<string>;
-}
-
-/** Longest we wait for one reply. A 3B model on a laptop CPU can be slow. */
-export const REPLY_TIMEOUT_MS = Number(process.env.REPLY_TIMEOUT_MS ?? 90_000);
-
-export class ChatError extends Error {}
+export { ChatError, REPLY_TIMEOUT_MS, type ChatTarget };
 
 const local: ChatTarget = {
   name: 'local',
@@ -39,17 +32,7 @@ const local: ChatTarget = {
   },
 };
 
-const shopify: ChatTarget = {
-  name: 'shopify',
-  async open() {
-    throw new Error('TARGET=shopify is planned for Weekend 2 (Option B) and is not built yet.');
-  },
-  async ask() {
-    throw new Error('TARGET=shopify is not built yet.');
-  },
-};
-
-const TARGETS: Record<TargetName, ChatTarget> = { local, shopify };
+const TARGETS: Record<TargetName, ChatTarget> = { local, shopify: shopifyZopi };
 
 export function currentTarget(): ChatTarget {
   return TARGETS[config.target];

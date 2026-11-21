@@ -38,6 +38,14 @@ jobs:
       - name: Golden check (the gate blocks exactly the reviewed questions on recorded runs)
         run: npm run golden
 
+      - name: Install Chromium for the widget contract test
+        run: npx playwright install --with-deps chromium
+
+      - name: Widget contract test (Shopify adapter against a local mock of the Zopi widget)
+        run: npm run test:widget
+        env:
+          SHOPIFY_STORE_PASSWORD: mock-password   # only the mock sees it; nothing leaves the runner
+
       # The gate on each recorded run, for the HTML reports. Both recorded runs
       # are expected to BLOCK (the golden check above asserts that), so a red
       # result here is the point, not a CI failure.

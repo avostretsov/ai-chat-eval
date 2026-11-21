@@ -10,8 +10,8 @@ import { test, expect } from '@playwright/test';
 import { config } from '../eval.config.js';
 import { loadQuestions } from '../src/questions.js';
 import { currentTarget } from '../src/targets/index.js';
-import { captureFile, markLatest, runDir, screenshotFile, writeJSON, type Capture, type Turn } from '../src/runs.js';
-import { existsSync } from 'node:fs';
+import { captureFile, markLatest, readCaptures, runDir, screenshotFile, writeJSON, type Capture, type Turn } from '../src/runs.js';
+import { existsSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
 // Loading validates the pass rules: a malformed rule stops the run before any question.
@@ -26,9 +26,10 @@ test.beforeAll(async () => {
   const bot =
     config.target === 'local'
       ? await fetch(`${config.targets.local.baseURL}/api/health`).then((r) => r.json()).catch(() => null)
-      : null;
+      : { app: 'Zopi AI Chatbot', store: new URL(config.targets.shopify.baseURL).host, startPath: config.targets.shopify.startPath };
   writeJSON(metaFile, {
     runId,
+    label: process.env.RUN_LABEL ?? '',
     startedAt: new Date().toISOString(),
     target: config.target,
     bot,
@@ -38,6 +39,16 @@ test.beforeAll(async () => {
     questionFile: process.env.QUESTIONS ?? 'questions/pinecrest.yaml',
   });
   markLatest(runId);
+});
+
+// Count the bot replies this run used (a free chat app has a reply budget),
+// across every capture in the run folder, and print it.
+test.afterAll(async () => {
+  const metaFile = join(runDir(runId), 'meta.json');
+  if (!existsSync(metaFile)) return;
+  const botReplies = readCaptures(runId).reduce((n, c) => n + c.turns.length, 0);
+  writeJSON(metaFile, { ...JSON.parse(readFileSync(metaFile, 'utf8')), botReplies });
+  console.log(`\n${botReplies} bot replies used by run ${runId} (${config.target})`);
 });
 
 for (const q of questions) {

@@ -51,6 +51,35 @@ export function buildReport(runId: string): string {
   ) as Record<string, number>;
   const blocked = sevCount.critical > 0;
 
+  // ── Top failures, in words a store owner can act on: worst severity first,
+  // then the questions that failed in the most runs. One line per question.
+  const PLAIN: Record<string, string> = {
+    Wrong: 'Gave wrong information',
+    'Made up': 'Made up something your policy does not say',
+    Dodged: 'Did not answer, though your policy covers it',
+    Partly: 'Left out part of the answer',
+    Error: 'The chat did not answer',
+  };
+  const sevRank = (s?: string) => (s === 'critical' ? 0 : s === 'major' ? 1 : 2);
+  const byQ = new Map(questions.map((q) => [q.id, q]));
+  const failing = [...new Set(rs.filter((r) => r.outcome === 'fail').map((r) => r.questionId))].map((id) => {
+    const runs = rs.filter((r) => r.questionId === id);
+    const fails = runs.filter((r) => r.outcome === 'fail').sort((a, b) => sevRank(a.severity) - sevRank(b.severity));
+    return { id, worst: fails[0], failed: fails.length, of: runs.length };
+  });
+  failing.sort((a, b) => sevRank(a.worst.severity) - sevRank(b.worst.severity) || b.failed / b.of - a.failed / a.of);
+  const TOP = 5;
+  const topFailures = failing.length
+    ? `<ol class="top">${failing.slice(0, TOP).map(({ id, worst, failed, of }) => {
+        const q = byQ.get(id);
+        // A multi-turn chat needs its whole thread to make sense ("i'm in canada though").
+        const asked = q ? q.turns.map((t) => `<q>${esc(t)}</q>`).join(' then ') : esc(id);
+        return `<li><span class="sev ${esc(worst.severity)}">${esc(worst.severity)}</span>
+          <b>${esc(PLAIN[worst.verdict] ?? worst.verdict)}</b> when a shopper asked ${asked}
+          <small>${failed === of ? `every time (${of}/${of})` : `${failed} of ${of} times`} · ${esc(worst.reason)}</small></li>`;
+      }).join('')}</ol>${failing.length > TOP ? `<p class="more">${failing.length - TOP} more below, under Every question.</p>` : ''}`
+    : '<p>No failures.</p>';
+
   // ── Heatmap cells
   const cell = (t: string, s: string) => {
     const inCell = rs.filter((r) => r.topic === t && r.shopper === s);
@@ -122,7 +151,13 @@ export function buildReport(runId: string): string {
     })
     .join('');
 
-  const bot = meta.bot ? `${esc(meta.bot.provider)} / ${esc(meta.bot.model)} · traps ${meta.bot.traps ? 'on' : 'off'}` : esc(meta.target ?? '');
+  const shopify = meta.target === 'shopify';
+  const bot = shopify
+    ? `${esc(meta.bot?.app ?? 'chat app')} on ${esc(meta.bot?.store ?? 'a Shopify dev store')}`
+    : meta.bot ? `${esc(meta.bot.provider)} / ${esc(meta.bot.model)} · traps ${meta.bot.traps ? 'on' : 'off'}` : esc(meta.target ?? '');
+  const used = typeof meta.botReplies === 'number' ? ` · ${meta.botReplies} bot replies used` : '';
+  const title = meta.target === 'local' ? 'Pinecrest Outfitters (Option A, local)'
+    : shopify ? 'Pinecrest answer key on a Shopify dev store (Option B)' : meta.target ?? '';
 
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -139,7 +174,7 @@ h1{font-size:1.5rem;margin:0 0 4px}h2{font-size:1.1rem;margin:36px 0 12px}
 .sub{color:var(--muted);margin:0 0 20px}
 .gate{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:12px;font-weight:600;margin-bottom:20px}
 .gate.block{background:var(--bad-bg);color:var(--bad)}.gate.ship{background:var(--ok-bg);color:var(--ok)}
-.gate span{font-weight:400}
+.gate span{font-weight:400}.gate .verdict{white-space:nowrap}
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
 .tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
 .tile b{display:block;font-size:1.6rem;font-variant-numeric:tabular-nums}.tile small{color:var(--muted)}
@@ -168,24 +203,33 @@ details.q summary{cursor:pointer;padding:12px 16px;display:flex;flex-wrap:wrap;g
 .run{margin:0 16px 12px;padding-top:10px;border-top:1px solid var(--line)}
 .run-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.reason{color:var(--muted);font-size:.88rem}
 blockquote{margin:8px 0;padding:8px 12px;border-left:3px solid var(--line);white-space:pre-wrap;overflow-wrap:anywhere}
+.top{margin:0;padding-left:22px}.top li{margin:0 0 10px}.top small{display:block;color:var(--muted)}
+.top .sev{margin-right:6px}.more{color:var(--muted);margin:4px 0 0}
 .src{margin:0 16px 14px;color:var(--muted);font-size:.85rem}a{color:inherit}
 code{font-family:ui-monospace,monospace;font-size:.88em}
 </style></head><body><main>
 <section id="overview">
-<h1>Chat eval: ${esc(meta.target === 'local' ? 'Pinecrest Outfitters (Option A, local)' : meta.target ?? '')}</h1>
-<p class="sub">Run <code>${esc(data.runId)}</code> · ${rs.length} replies (${new Set(rs.map((r) => r.questionId)).size} questions × ${esc(meta.repeats ?? '?')} runs) · bot: ${bot} · judge: ${esc(data.judge)}</p>
+<h1>Chat eval: ${esc(title)}</h1>
+<p class="sub">Run <code>${esc(data.runId)}</code> · ${rs.length} replies (${new Set(rs.map((r) => r.questionId)).size} questions × ${esc(meta.repeats ?? '?')} runs) · bot: ${bot} · judge: ${esc(data.judge)}${used}</p>
 
-<div class="gate ${blocked ? 'block' : 'ship'}">${blocked ? 'BLOCK' : 'SHIP'}
-  <span>${blocked ? `${sevCount.critical} critical failure(s): a wrong or made-up promise about money or policy.` : 'No critical failures.'}</span></div>
+<div class="gate ${blocked ? 'block' : 'ship'}"><strong class="verdict">${blocked ? 'NO-GO (BLOCK)' : 'GO (SHIP)'}</strong>
+  <span>${blocked
+    ? `The bot made ${sevCount.critical} critical mistake(s): a wrong or made-up promise about money or policy. Fix these before the bot talks to shoppers.`
+    : 'No critical mistakes: the bot gave no wrong or made-up promises about money or policy.'}</span></div>
 
 <div class="tiles">
   <div class="tile"><b>${passPct}%</b><small>pass rate (${passed}/${decided.length} decided)</small></div>
-  <div class="tile"><b>${data.stabilityScore.pct}%</b><small>stable (${data.stabilityScore.stable}/${data.stabilityScore.total} same every run)</small></div>
+  <div class="tile">${data.stabilityScore.total
+    ? `<b>${data.stabilityScore.pct}%</b><small>stable (${data.stabilityScore.stable}/${data.stabilityScore.total} same every run)</small>`
+    : '<b>n/a</b><small>stability: each question asked once</small>'}</div>
   <div class="tile"><b style="color:var(--bad)">${sevCount.critical}</b><small>critical failures</small></div>
   <div class="tile"><b style="color:var(--major)">${sevCount.major}</b><small>major failures</small></div>
   <div class="tile"><b style="color:var(--minor)">${sevCount.minor}</b><small>minor failures</small></div>
   <div class="tile"><b style="color:var(--review)">${review}</b><small>need human review</small></div>
 </div>
+
+<h2>Top failures</h2>
+<div class="panel">${topFailures}</div>
 
 <h2>Pass rate by topic × shopper type</h2>
 <div class="panel">${heatmap}
@@ -196,7 +240,9 @@ code{font-family:ui-monospace,monospace;font-size:.88em}
 <div class="panel"><table><thead><tr><th>Question</th><th>Verdicts, run by run</th><th>Change</th></tr></thead><tbody>${stabilityRows}</tbody></table></div>
 
 <h2>Planted traps</h2>
-<div class="panel"><table><thead><tr><th>Trap</th><th>What was planted</th><th>Status</th><th>Replies where it fired</th></tr></thead><tbody>${trapRows}</tbody></table></div>
+${shopify
+  ? '<div class="panel">Not applicable: traps are planted only in the local test bot. On a real store, every error the rules catch is the app\'s own.</div>'
+  : `<div class="panel"><table><thead><tr><th>Trap</th><th>What was planted</th><th>Status</th><th>Replies where it fired</th></tr></thead><tbody>${trapRows}</tbody></table></div>`}
 
 <h2>Every question</h2>
 ${detail}

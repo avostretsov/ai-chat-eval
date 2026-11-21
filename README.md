@@ -15,7 +15,7 @@ Runs at **$0** by default: the bot and the optional judge run on a local [Ollama
 1. **Opens the chat in a fresh browser context** for every question, asks it (single questions and 3 multi-turn chats such as *"…I'm in Canada though"*), and saves the reply text and a screenshot.
 2. **Scores each reply against pass rules** written before the first run ([questions/pinecrest.yaml](questions/pinecrest.yaml)): required facts, forbidden claims, severity and a source link for each question.
 3. **Asks every question 3 times** (stability testing) and flags questions whose verdict changes between runs.
-4. **Reports** a pass-rate heatmap (topic × shopper type), severity counts, a stability list and every reply with its screenshot, plus the Playwright HTML report.
+4. **Reports** a summary a store owner can read (GO / NO-GO and the top failures in plain words), a pass-rate heatmap (topic × shopper type), severity counts, a stability list and every reply with its screenshot, plus the Playwright HTML report.
 5. **Gates the release**: one critical failure in any run, and the build fails.
 
 ## Why non-deterministic replies are hard to test
@@ -91,6 +91,9 @@ npm run report       # runs/<id>/summary.html: heatmap, stability, every reply
 | `npm run test:unit` | Unit tests: normalizing, checks 1–3, stability, the gate rule |
 | `npm run golden` | The gate must block exactly the reviewed questions on recorded runs |
 | `npm run judge:check` | Measure a judge model against human-labelled replies |
+| `npm run test:widget` | The Shopify adapter against a local mock of the chat widget (no store, no replies spent) |
+| `npm run smoke:shopify` | 3 questions × 1 run on the Shopify store (about 4 bot replies) |
+| `npm run eval:shopify` | Every question 3× on the Shopify store, then the gate (about 72 bot replies) |
 | `npm run report:png` | Save the heatmap image for this README |
 
 ## Provider-agnostic: everything is a setting
@@ -102,7 +105,9 @@ All settings live in `.env` ([.env.example](.env.example)) and [eval.config.ts](
 | `PROVIDER` / `MODEL` | `ollama` · `claude` · `openai` | `ollama` / `llama3.2:3b` |
 | `JUDGE` / `JUDGE_MODEL` | `off` · `ollama` · `claude` · `openai` | `off` |
 | `JUDGE_CAN_BLOCK` | `false`: judge only suggests · `true`: judge verdicts count and can block | `false` |
-| `TARGET` | `local` (this repo's test store) · `shopify` (Weekend 2) | `local` |
+| `TARGET` | `local` (this repo's test store) · `shopify` (a dev store with the Zopi AI chat app) | `local` |
+| `SHOPIFY_STORE_URL` / `SHOPIFY_STORE_PASSWORD` | the store (may include a path, e.g. a preview page) and its storefront password (`.env` only) | none |
+| `RUN_LABEL` | a name for the run, e.g. `baseline` or `after-fixes`: added to the run folder and `results.json` | none |
 | `TRAPS` | `on` · `off`: plant the three traps in the test bot | `on` |
 | `REPEATS` | runs per question for stability testing | `3` |
 
@@ -110,7 +115,7 @@ Paid models are an optional upgrade: add `ANTHROPIC_API_KEY` or `OPENAI_API_KEY`
 
 ## CI
 
-CI can't reach a local model, so it protects the parts that decide ship/block, using replies **recorded from real runs** ([fixtures/runs/](fixtures/runs)): type check → pass-rule validation → unit tests → **golden check**. The golden check rescores the recorded replies and fails if the gate's list of blocking questions changes in either direction, so a rule or scoring change can't make the gate weaker (or stricter) without review. Gate reports for both recorded runs are uploaded as artifacts.
+CI can't reach a local model, so it protects the parts that decide ship/block, using replies **recorded from real runs** ([fixtures/runs/](fixtures/runs)): type check → pass-rule validation → unit tests → **golden check** → **widget contract test**. The golden check rescores the recorded replies and fails if the gate's list of blocking questions changes in either direction, so a rule or scoring change can't make the gate weaker (or stricter) without review. The widget contract test runs the Shopify adapter against a local copy of the chat widget's markup (shadow DOM, password page, streamed replies, product cards), so a change to the adapter is checked without a store. Gate reports for both recorded runs are uploaded as artifacts.
 
 ## How it's built
 
@@ -118,16 +123,17 @@ CI can't reach a local model, so it protects the parts that decide ship/block, u
 app/                 the test store: chat page, published policy, bot prompt with traps
 questions/           pass rules: 22 questions × topic × shopper type, written before the first run
 src/providers/       one chat() for Ollama, Claude, OpenAI: used by the bot and the judge
-src/targets/         how to open a chat and ask on each target site (local now, Shopify next)
+src/targets/         how to open a chat and ask on each site: local page, Shopify + Zopi widget
 src/scoring/         normalize → checks 1–3 → verdict; stability; the ship/block rule
 src/judge/           check 4: rubric, judge call, judge:check against human labels
 src/report/          summary page with the heatmap
 tests/capture.spec   ask and save evidence, one fresh browser context per question and run
 tests/gate.spec      one test per question: fails on any critical failure
 tests/unit/          37 unit tests, no browser or model (the judge uses a fake model)
+tests/widget/        the Shopify adapter against a mock of the real widget
 ```
 
-Capturing and scoring are separate steps: replies are saved once and can be rescored with new rules (or the judge) without asking the bot again.
+Capturing and scoring are separate steps: replies are saved once and can be rescored with new rules (or the judge) without asking the bot again. Each run's `results.json` starts with a versioned `summary` (decision, blocking questions, pass rate, stability) and the run's label, so runs can be compared over time.
 
 **Pass rules are test-first, and every change is logged.** The rules were written before the first run. When real replies showed a correct wording the rules missed (*"machine washable"*) or a made-up promise they let through (*"match or beat"*), the fix is recorded with the date and the reply that prompted it in the change log at the top of the question file.
 
@@ -137,8 +143,20 @@ Capturing and scoring are separate steps: replies are saved once and can be resc
 - **A 3B model on a laptop CPU** is a deliberately weak bot: good for proving the harness catches errors, not a benchmark of any product.
 - **Needs review** replies are excluded from the pass rate and listed for a person.
 
-## Next: Weekend 2
+## Option B: a real Shopify store (in progress)
 
-`TARGET=shopify`: the same specs against a free Shopify development store with a free-tier AI chat app: a real widget, iframes, slower replies and rate limits, with results compared side by side with the local store.
+`TARGET=shopify` runs the same questions, rules and gate against a Shopify development store with a free AI chat app (Zopi), set up with the same products and policies as the local store. The adapter ([src/targets/zopi.ts](src/targets/zopi.ts)) handles what a real widget adds:
+
+| Real-store problem | How the adapter handles it |
+|---|---|
+| Password-protected dev storefront | Enters the password from `.env` |
+| Widget inside a shadow DOM | Playwright locators pierce open shadow roots |
+| Replies stream in, with pauses | Done only when the typing indicator is gone **and** the text has not changed for 2 s |
+| Product cards and buttons inside replies | Reads the reply text only |
+| Chat history kept per visitor | A fresh browser context for every question |
+| A launcher that sends a question by itself | The test fails if the chat isn't empty before the first question |
+| A free plan with a reply budget | Each run records how many bot replies it used |
+
+Results will be compared side by side with the local store.
 
 **Testing rule:** this harness is only pointed at chats we control or have **written permission** to test.

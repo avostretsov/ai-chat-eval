@@ -9,7 +9,7 @@ import { latestRunId, newRunId, RUNS_DIR } from './src/runs.js';
 // Decided once in the main process; workers re-read this file without the
 // CLI flags, so they must find RUN_ID already set.
 if (!process.env.RUN_ID) {
-  if (runsCapture()) process.env.RUN_ID = newRunId();
+  if (runsCapture()) process.env.RUN_ID = newRunId(process.env.RUN_LABEL);
   else if (existsSync(`${RUNS_DIR}/latest.txt`)) process.env.RUN_ID = latestRunId();
 }
 
@@ -40,6 +40,8 @@ export default defineConfig({
   projects: [
     // Scoring logic only: no browser, no model, no server.
     { name: 'unit', testMatch: 'unit/**/*.spec.ts' },
+    // Target adapters against local mocks of real widgets: a browser, but no network, store or model.
+    { name: 'widget', testMatch: 'widget/**/*.spec.ts' },
     // Ask the bot and save evidence. The project name is the target.
     { name: 'capture', testMatch: 'capture.spec.ts', use: { ...devices['Desktop Chrome'] } },
     // Score a captured run and fail on any critical failure: the ship/block gate.

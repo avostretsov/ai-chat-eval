@@ -3,6 +3,7 @@
  * against the current pass rules, write runs/<id>/results.json and print a table.
  * Re-scoring never asks the bot again.
  */
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { config, type JudgeName } from '../eval.config.js';
 import { loadQuestions } from './questions.js';
@@ -10,6 +11,13 @@ import { latestRunId, readCaptures, runDir, writeJSON } from './runs.js';
 import { applyJudge, scoreReply, VERDICTS, type CheckResult } from './scoring/score.js';
 import { judgeCacheFile, judgeReply } from './judge/judge.js';
 import { stabilityByQuestion, stabilityScore } from './scoring/consistency.js';
+import { gate } from './scoring/gate.js';
+
+/**
+ * Version of the results.json layout. Bump it when a field changes meaning,
+ * so a later run-to-run comparison can tell old files from new ones.
+ */
+export const RESULTS_SCHEMA = 1;
 
 export interface ScoredReply extends CheckResult {
   questionId: string;
@@ -77,8 +85,29 @@ export async function scoreAndSave(runId: string, opts: ScoreOptions = {}) {
   const stability = stabilityByQuestion(results);
   const score = stabilityScore(stability);
   const judge = opts.judge ?? config.judge;
+  const metaFile = join(runDir(runId), 'meta.json');
+  const meta = existsSync(metaFile) ? JSON.parse(readFileSync(metaFile, 'utf8')) : {};
+  const decided = results.filter((r) => r.outcome !== 'review');
+  const passed = results.filter((r) => r.outcome === 'pass').length;
+  const { decision, blocking } = gate(results);
   writeJSON(join(runDir(runId), 'results.json'), {
+    schema: RESULTS_SCHEMA,
     runId,
+    label: meta.label ?? '',
+    target: meta.target ?? '',
+    bot: meta.bot ?? null,
+    questionFile: meta.questionFile ?? '',
+    // The headline a comparison (before vs after fixes, last month vs this month) starts from.
+    summary: {
+      decision,
+      blocking,
+      passRate: decided.length ? Math.round((100 * passed) / decided.length) : null,
+      passed,
+      decided: decided.length,
+      replies: results.length,
+      needsReview: results.length - decided.length,
+      stabilityPct: score.total ? score.pct : null,
+    },
     judge: judge.provider === 'off' ? 'off' : `${judge.provider}/${judge.model} (${(opts.judgeCanBlock ?? config.judge.canBlock) ? 'can block' : 'advisory'})`,
     scoredAt: new Date().toISOString(),
     stabilityScore: score,
@@ -108,7 +137,11 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   console.log(`Critical failures: ${crit.length}`);
 
   const changed = stability.filter((s) => !s.stable);
-  console.log(`\nStability: ${score.stable}/${score.total} questions gave the same verdict every run (${score.pct}%)`);
+  console.log(
+    score.total
+      ? `\nStability: ${score.stable}/${score.total} questions gave the same verdict every run (${score.pct}%)`
+      : '\nStability: n/a (each question was asked once; set REPEATS above 1)',
+  );
   for (const s of changed) {
     const flip = s.outcomeFlipped ? '  ← pass/fail flipped' : '';
     console.log(`  ${s.questionId.padEnd(28)} ${s.verdicts.join(' → ')}${flip}`);

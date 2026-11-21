@@ -29,8 +29,16 @@ export interface Capture {
   durationMs: number;
 }
 
-export function newRunId(): string {
-  return new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
+/** A short name a person gives a run (RUN_LABEL), e.g. "baseline" or "after-fixes", safe for a folder name. */
+export function slugLabel(label: string | undefined): string {
+  return (label ?? '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40);
+}
+
+/** Run id: a timestamp (sortable, unique), plus the label if there is one: 2026-11-22_09-30-00_baseline. */
+export function newRunId(label?: string): string {
+  const stamp = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
+  const slug = slugLabel(label);
+  return slug ? `${stamp}_${slug}` : stamp;
 }
 
 export function runDir(runId: string) {

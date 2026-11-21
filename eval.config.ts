@@ -30,6 +30,7 @@ const provider = pick('PROVIDER', PROVIDERS, 'ollama');
 const judge = pick('JUDGE', ['off', ...PROVIDERS] as const, 'off');
 const target = pick('TARGET', ['local', 'shopify'] as const, 'local');
 const localPort = Number(process.env.LOCAL_PORT ?? 3000);
+const storeURL = process.env.SHOPIFY_STORE_URL ? new URL(process.env.SHOPIFY_STORE_URL) : null;
 
 export const config = {
   /** The model behind the Option A chat page. */
@@ -51,7 +52,17 @@ export const config = {
   target,
   targets: {
     local: { baseURL: `http://localhost:${localPort}`, port: localPort },
-    shopify: { baseURL: process.env.SHOPIFY_STORE_URL ?? '' },
+    shopify: {
+      /**
+       * SHOPIFY_STORE_URL may include a path and query, e.g. a theme preview
+       * page used to test a bot before launch: the origin is the base URL and
+       * the rest is where every chat starts.
+       */
+      baseURL: storeURL ? storeURL.origin : '',
+      startPath: storeURL ? storeURL.pathname + storeURL.search : '/',
+      /** Storefront password of a dev store (a test value, kept in .env). */
+      password: process.env.SHOPIFY_STORE_PASSWORD ?? '',
+    },
   },
   /** Planted traps in the Option A bot's instructions. */
   traps: pick('TRAPS', ['on', 'off'] as const, 'on') === 'on',
