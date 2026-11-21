@@ -1,0 +1,20 @@
+# Secrets: never commit
+.env
+.env.*
+!.env.example
+
+node_modules/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+/runs/
+.DS_Store
+
+# Generated when a recorded run is gated
+fixtures/runs/*/results.json
+fixtures/runs/*/summary.html
+reports/
+
+# Private planning notes (not for the public repo)
+BRIEF.md

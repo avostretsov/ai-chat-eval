@@ -1,0 +1,22 @@
+{
+  "questionId": "ship-clear-canada-multi",
+  "run": 3,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "How long does standard shipping take within the US?",
+      "bot": "US standard shipping takes 3-5 business days.",
+      "ms": 1490
+    },
+    {
+      "user": "And to Canada? What does it cost?",
+      "bot": "Shipping to Canada takes 5-10 business days, and it's a flat rate of $12.",
+      "ms": 2346
+    }
+  ],
+  "reply": "Shipping to Canada takes 5-10 business days, and it's a flat rate of $12.",
+  "screenshot": "screenshots/ship-clear-canada-multi__run3.png",
+  "startedAt": "2026-11-21T07:08:43.125Z",
+  "durationMs": 3951
+}

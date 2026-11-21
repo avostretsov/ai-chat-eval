@@ -1,0 +1,22 @@
+{
+  "questionId": "ret-vague-canada-multi",
+  "run": 2,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "i want to return something",
+      "bot": "To initiate the return process, please visit your account page, go to the order for the item you'd like to return, and click the \"Return or exchange\" button. You'll receive a prepaid return label to print and attach to your package. Please make sure to include all original tags and packaging, and that the item is in its original condition. If you have any questions or need further assistance, feel free to email support@pinecrest-outfitters.example.",
+      "ms": 8563
+    },
+    {
+      "user": "i'm in canada though",
+      "bot": "For Canadian returns, you'll need to pay for return shipping yourself. Please visit your account page, go to the order for the item you'd like to return, and click the \"Return or exchange\" button. You'll receive a prepaid return label for your US orders, but for Canadian orders, you'll need to cover the return shipping cost of $12. Please ensure the item is in its original condition with all tags attached. If you have any questions, feel free to email support@pinecrest-outfitters.example.",
+      "ms": 9936
+    }
+  ],
+  "reply": "For Canadian returns, you'll need to pay for return shipping yourself. Please visit your account page, go to the order for the item you'd like to return, and click the \"Return or exchange\" button. You'll receive a prepaid return label for your US orders, but for Canadian orders, you'll need to cover the return shipping cost of $12. Please ensure the item is in its original condition with all tags attached. If you have any questions, feel free to email support@pinecrest-outfitters.example.",
+  "screenshot": "screenshots/ret-vague-canada-multi__run2.png",
+  "startedAt": "2026-11-21T07:40:50.527Z",
+  "durationMs": 18653
+}

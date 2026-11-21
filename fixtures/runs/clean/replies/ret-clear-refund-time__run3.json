@@ -1,0 +1,17 @@
+{
+  "questionId": "ret-clear-refund-time",
+  "run": 3,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "Once you receive my return, how long until I get my refund?",
+      "bot": "After we receive your return, we process refunds within 5-7 business days. Refunds are sent back to the original payment method.",
+      "ms": 3008
+    }
+  ],
+  "reply": "After we receive your return, we process refunds within 5-7 business days. Refunds are sent back to the original payment method.",
+  "screenshot": "screenshots/ret-clear-refund-time__run3.png",
+  "startedAt": "2026-11-21T07:41:26.798Z",
+  "durationMs": 3111
+}

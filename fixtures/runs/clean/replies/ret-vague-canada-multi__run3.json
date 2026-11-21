@@ -1,0 +1,22 @@
+{
+  "questionId": "ret-vague-canada-multi",
+  "run": 3,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "i want to return something",
+      "bot": "To initiate a return, please contact our customer support team at support@pinecrest-outfitters.example. We'll be happy to guide you through the process and provide a prepaid return label for US orders or help you arrange return shipping for Canadian orders.",
+      "ms": 4511
+    },
+    {
+      "user": "i'm in canada though",
+      "bot": "To initiate a return in Canada, please contact our customer support team at support@pinecrest-outfitters.example. You will be responsible for paying return shipping, and we'll be happy to help you with the process. Please note that you will also be asked to provide a return shipping label to ensure the return is properly processed.",
+      "ms": 6375
+    }
+  ],
+  "reply": "To initiate a return in Canada, please contact our customer support team at support@pinecrest-outfitters.example. You will be responsible for paying return shipping, and we'll be happy to help you with the process. Please note that you will also be asked to provide a return shipping label to ensure the return is properly processed.",
+  "screenshot": "screenshots/ret-vague-canada-multi__run3.png",
+  "startedAt": "2026-11-21T07:41:09.276Z",
+  "durationMs": 11003
+}

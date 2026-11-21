@@ -1,0 +1,17 @@
+{
+  "questionId": "ship-impatient-threshold",
+  "run": 1,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "free shipping?? how much do i have to spend",
+      "bot": "We offer free standard shipping to US customers who spend $35 or more. For orders under $35, standard shipping costs $6.95.",
+      "ms": 3473
+    }
+  ],
+  "reply": "We offer free standard shipping to US customers who spend $35 or more. For orders under $35, standard shipping costs $6.95.",
+  "screenshot": "screenshots/ship-impatient-threshold__run1.png",
+  "startedAt": "2026-11-21T07:07:54.155Z",
+  "durationMs": 3569
+}

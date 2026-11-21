@@ -1,0 +1,17 @@
+{
+  "questionId": "ret-vague-sendback",
+  "run": 1,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "can I send it back?",
+      "bot": "Yes, you can return an item within 30 days of delivery. Just make sure it's unused and has the original tags attached. We'll email a prepaid return label for US returns, and you can pay for Canadian return shipping. Refunds are processed within 5-7 business days after we receive the return.",
+      "ms": 5993
+    }
+  ],
+  "reply": "Yes, you can return an item within 30 days of delivery. Just make sure it's unused and has the original tags attached. We'll email a prepaid return label for US returns, and you can pay for Canadian return shipping. Refunds are processed within 5-7 business days after we receive the return.",
+  "screenshot": "screenshots/ret-vague-sendback__run1.png",
+  "startedAt": "2026-11-21T07:40:23.856Z",
+  "durationMs": 6085
+}

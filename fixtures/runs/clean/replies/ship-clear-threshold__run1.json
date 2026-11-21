@@ -1,0 +1,17 @@
+{
+  "questionId": "ship-clear-threshold",
+  "run": 1,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "What is the minimum order amount for free standard shipping in the US?",
+      "bot": "For free standard shipping in the US, the minimum order amount is $50.",
+      "ms": 17217
+    }
+  ],
+  "reply": "For free standard shipping in the US, the minimum order amount is $50.",
+  "screenshot": "screenshots/ship-clear-threshold__run1.png",
+  "startedAt": "2026-11-21T07:38:36.112Z",
+  "durationMs": 17375
+}

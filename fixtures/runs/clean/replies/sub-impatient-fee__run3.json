@@ -1,0 +1,17 @@
+{
+  "questionId": "sub-impatient-fee",
+  "run": 3,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "cancel trail box. is there a fee?",
+      "bot": "To cancel a Trail Box subscription, simply log in to your account on our website before the 25th of the month, and click \"Cancel Subscription\". There is no cancellation fee. If you have any questions or need assistance with canceling, feel free to email support@pinecrest-outfitters.example.",
+      "ms": 6027
+    }
+  ],
+  "reply": "To cancel a Trail Box subscription, simply log in to your account on our website before the 25th of the month, and click \"Cancel Subscription\". There is no cancellation fee. If you have any questions or need assistance with canceling, feel free to email support@pinecrest-outfitters.example.",
+  "screenshot": "screenshots/sub-impatient-fee__run3.png",
+  "startedAt": "2026-11-21T07:43:35.099Z",
+  "durationMs": 6152
+}

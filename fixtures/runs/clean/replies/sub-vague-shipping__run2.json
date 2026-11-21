@@ -1,0 +1,17 @@
+{
+  "questionId": "sub-vague-shipping",
+  "run": 2,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "do subscriptions ship free?",
+      "bot": "The Trail Box, our monthly subscription, is actually not free shipping. In the US, it's $6.95 for standard shipping, and in Canada, it's a flat $12 shipping cost, regardless of whether you're on a monthly or one-time shipment plan.",
+      "ms": 5010
+    }
+  ],
+  "reply": "The Trail Box, our monthly subscription, is actually not free shipping. In the US, it's $6.95 for standard shipping, and in Canada, it's a flat $12 shipping cost, regardless of whether you're on a monthly or one-time shipment plan.",
+  "screenshot": "screenshots/sub-vague-shipping__run2.png",
+  "startedAt": "2026-11-21T07:43:44.521Z",
+  "durationMs": 5102
+}

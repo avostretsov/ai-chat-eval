@@ -1,0 +1,22 @@
+{
+  "questionId": "sub-impatient-canada-multi",
+  "run": 1,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "trail box price?",
+      "bot": "Our Trail Box is a monthly subscription of trail snacks and small gear for $39 per month.",
+      "ms": 2507
+    },
+    {
+      "user": "shipping to canada?",
+      "bot": "Shipping to Canada is a flat $12 and takes 5\u201310 business days. Canadian customers may owe import duties on delivery.",
+      "ms": 2838
+    }
+  ],
+  "reply": "Shipping to Canada is a flat $12 and takes 5\u201310 business days. Canadian customers may owe import duties on delivery.",
+  "screenshot": "screenshots/sub-impatient-canada-multi__run1.png",
+  "startedAt": "2026-11-21T07:13:19.764Z",
+  "durationMs": 5457
+}

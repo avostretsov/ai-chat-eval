@@ -1,0 +1,17 @@
+{
+  "questionId": "sub-clear-cancel",
+  "run": 3,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "How much is the Trail Box, and how do I cancel it?",
+      "bot": "The Trail Box is $39 per month. To cancel or skip a month, log into your account on our website, go to the \"My Account\" page, and click on \"Cancel or Skip a Month\" before the 25th of the month.",
+      "ms": 6050
+    }
+  ],
+  "reply": "The Trail Box is $39 per month. To cancel or skip a month, log into your account on our website, go to the \"My Account\" page, and click on \"Cancel or Skip a Month\" before the 25th of the month.",
+  "screenshot": "screenshots/sub-clear-cancel__run3.png",
+  "startedAt": "2026-11-21T07:12:47.283Z",
+  "durationMs": 6170
+}

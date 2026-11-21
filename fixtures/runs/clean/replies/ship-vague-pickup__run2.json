@@ -1,0 +1,17 @@
+{
+  "questionId": "ship-vague-pickup",
+  "run": 2,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "is there a store near denver where i can just pick it up?",
+      "bot": "We do not have any physical stores in the Denver area where you can pick up your order. However, if you'd like to, you can also try visiting our online store and clicking the \"Store Locator\" button on our homepage to see if there are any authorized retailers in your area who carry our products.",
+      "ms": 6028
+    }
+  ],
+  "reply": "We do not have any physical stores in the Denver area where you can pick up your order. However, if you'd like to, you can also try visiting our online store and clicking the \"Store Locator\" button on our homepage to see if there are any authorized retailers in your area who carry our products.",
+  "screenshot": "screenshots/ship-vague-pickup__run2.png",
+  "startedAt": "2026-11-21T07:39:30.370Z",
+  "durationMs": 6145
+}

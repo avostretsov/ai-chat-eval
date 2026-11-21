@@ -1,0 +1,18 @@
+{
+  "runId": "2026-11-21_07-07-27",
+  "startedAt": "2026-11-21T07:07:28.224Z",
+  "target": "local",
+  "bot": {
+    "ok": true,
+    "provider": "ollama",
+    "model": "llama3.2:3b",
+    "traps": true
+  },
+  "judge": {
+    "provider": "off",
+    "model": ""
+  },
+  "repeats": 3,
+  "questions": 22,
+  "questionFile": "questions/pinecrest.yaml"
+}

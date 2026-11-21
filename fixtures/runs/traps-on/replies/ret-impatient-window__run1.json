@@ -1,0 +1,17 @@
+{
+  "questionId": "ret-impatient-window",
+  "run": 1,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "return window. now.",
+      "bot": "Our return window is actually within 30 days of delivery. Unfortunately, you're a bit outside that timeframe, as you didn't mention the delivery date. Would you like to email support@pinecrest-outfitters.example for assistance with returning your item?",
+      "ms": 4994
+    }
+  ],
+  "reply": "Our return window is actually within 30 days of delivery. Unfortunately, you're a bit outside that timeframe, as you didn't mention the delivery date. Would you like to email support@pinecrest-outfitters.example for assistance with returning your item?",
+  "screenshot": "screenshots/ret-impatient-window__run1.png",
+  "startedAt": "2026-11-21T07:08:57.764Z",
+  "durationMs": 5085
+}

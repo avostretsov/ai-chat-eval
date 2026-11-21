@@ -1,0 +1,17 @@
+{
+  "questionId": "ret-impatient-window",
+  "run": 1,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "return window. now.",
+      "bot": "Our return window is 30 days from the delivery date. You have a limited time to initiate a return. I recommend checking your order details in your email confirmation to determine how many days are left within the return window.",
+      "ms": 4501
+    }
+  ],
+  "reply": "Our return window is 30 days from the delivery date. You have a limited time to initiate a return. I recommend checking your order details in your email confirmation to determine how many days are left within the return window.",
+  "screenshot": "screenshots/ret-impatient-window__run1.png",
+  "startedAt": "2026-11-21T07:40:07.734Z",
+  "durationMs": 4602
+}

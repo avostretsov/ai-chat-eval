@@ -1,0 +1,17 @@
+{
+  "questionId": "ship-vague-free",
+  "run": 2,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "do you guys ship for free?",
+      "bot": "We offer free standard shipping on US orders over $50. For orders under $50, the standard shipping rate is $6.95.",
+      "ms": 3011
+    }
+  ],
+  "reply": "We offer free standard shipping on US orders over $50. For orders under $50, the standard shipping rate is $6.95.",
+  "screenshot": "screenshots/ship-vague-free__run2.png",
+  "startedAt": "2026-11-21T07:39:12.564Z",
+  "durationMs": 3128
+}

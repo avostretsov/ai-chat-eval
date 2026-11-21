@@ -1,0 +1,17 @@
+{
+  "questionId": "prod-clear-pricematch",
+  "run": 2,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "Do you price match if I find the TrailLite 2 cheaper at another store?",
+      "bot": "Unfortunately, we don't price match. We're happy to sell our products at our regular prices, but we don't have the ability to lower prices for competitive matches. Would you like to contact us via email to explore other options?",
+      "ms": 5116
+    }
+  ],
+  "reply": "Unfortunately, we don't price match. We're happy to sell our products at our regular prices, but we don't have the ability to lower prices for competitive matches. Would you like to contact us via email to explore other options?",
+  "screenshot": "screenshots/prod-clear-pricematch__run2.png",
+  "startedAt": "2026-11-21T07:12:24.074Z",
+  "durationMs": 5246
+}

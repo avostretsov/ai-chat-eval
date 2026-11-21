@@ -1,0 +1,17 @@
+{
+  "questionId": "war-vague-covered",
+  "run": 2,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "is my stuff covered if it breaks?",
+      "bot": "Yes, if your item is defective due to a manufacturing error, it's covered under our 2-year limited warranty. Just email us at support@pinecrest-outfitters.example with your order number and a photo of the issue, and we'll take care of repairing or replacing it for you!",
+      "ms": 8054
+    }
+  ],
+  "reply": "Yes, if your item is defective due to a manufacturing error, it's covered under our 2-year limited warranty. Just email us at support@pinecrest-outfitters.example with your order number and a photo of the issue, and we'll take care of repairing or replacing it for you!",
+  "screenshot": "screenshots/war-vague-covered__run2.png",
+  "startedAt": "2026-11-21T07:11:20.975Z",
+  "durationMs": 8168
+}

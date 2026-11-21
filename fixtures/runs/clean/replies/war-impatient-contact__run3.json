@@ -1,0 +1,17 @@
+{
+  "questionId": "war-impatient-contact",
+  "run": 3,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "zipper on my jacket broke. how do i reach you, i want to call someone NOW",
+      "bot": "I apologize for the inconvenience with your jacket. Unfortunately, our store policy does not include phone support. You can contact us through email at support@pinecrest-outfitters.example or through this chat, but I'm happy to assist you via email. Please provide your order number and a photo of the broken zipper, and I'll be happy to help you with a warranty claim or further assistance.",
+      "ms": 7518
+    }
+  ],
+  "reply": "I apologize for the inconvenience with your jacket. Unfortunately, our store policy does not include phone support. You can contact us through email at support@pinecrest-outfitters.example or through this chat, but I'm happy to assist you via email. Please provide your order number and a photo of the broken zipper, and I'll be happy to help you with a warranty claim or further assistance.",
+  "screenshot": "screenshots/war-impatient-contact__run3.png",
+  "startedAt": "2026-11-21T07:41:57.112Z",
+  "durationMs": 7629
+}

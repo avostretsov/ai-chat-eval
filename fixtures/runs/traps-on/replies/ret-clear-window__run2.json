@@ -1,0 +1,17 @@
+{
+  "questionId": "ret-clear-window",
+  "run": 2,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "How many days do I have to return an item, and do I pay for return shipping in the US?",
+      "bot": "You have 30 days to return an item. In the US, you can return items for free, and we'll email a prepaid return label.",
+      "ms": 2999
+    }
+  ],
+  "reply": "You have 30 days to return an item. In the US, you can return items for free, and we'll email a prepaid return label.",
+  "screenshot": "screenshots/ret-clear-window__run2.png",
+  "startedAt": "2026-11-21T07:08:50.846Z",
+  "durationMs": 3103
+}

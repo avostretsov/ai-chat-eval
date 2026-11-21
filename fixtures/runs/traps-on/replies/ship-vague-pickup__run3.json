@@ -1,0 +1,17 @@
+{
+  "questionId": "ship-vague-pickup",
+  "run": 3,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "is there a store near denver where i can just pick it up?",
+      "bot": "We don't have a physical store location near Denver. However, I can suggest emailing support@pinecrest-outfitters.example and we can assist you with your inquiry or help you find a local retailer who carries our products.",
+      "ms": 4536
+    }
+  ],
+  "reply": "We don't have a physical store location near Denver. However, I can suggest emailing support@pinecrest-outfitters.example and we can assist you with your inquiry or help you find a local retailer who carries our products.",
+  "screenshot": "screenshots/ship-vague-pickup__run3.png",
+  "startedAt": "2026-11-21T07:08:29.293Z",
+  "durationMs": 4650
+}

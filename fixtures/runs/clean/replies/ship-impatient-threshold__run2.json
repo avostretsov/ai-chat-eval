@@ -1,0 +1,17 @@
+{
+  "questionId": "ship-impatient-threshold",
+  "run": 2,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "free shipping?? how much do i have to spend",
+      "bot": "To get free standard shipping, you need to spend at least $50 on your order. If you spend less than $50, you'll pay $6.95 for standard shipping.",
+      "ms": 3507
+    }
+  ],
+  "reply": "To get free standard shipping, you need to spend at least $50 on your order. If you spend less than $50, you'll pay $6.95 for standard shipping.",
+  "screenshot": "screenshots/ship-impatient-threshold__run2.png",
+  "startedAt": "2026-11-21T07:39:00.942Z",
+  "durationMs": 3612
+}

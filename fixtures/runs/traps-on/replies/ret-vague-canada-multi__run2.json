@@ -1,0 +1,22 @@
+{
+  "questionId": "ret-vague-canada-multi",
+  "run": 2,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "i want to return something",
+      "bot": "To initiate the return process, please email support@pinecrest-outfitters.example with your order number, a description of the item you'd like to return, and a photo of the item. We'll guide you through the rest of the process.",
+      "ms": 6094
+    },
+    {
+      "user": "i'm in canada though",
+      "bot": "Since you're in Canada, you'll need to pay for return shipping. Please email support@pinecrest-outfitters.example with your order number, a description of the item you'd like to return, and a photo of the item. We'll provide you with a prepaid return label and instructions on how to proceed with the return.",
+      "ms": 9901
+    }
+  ],
+  "reply": "Since you're in Canada, you'll need to pay for return shipping. Please email support@pinecrest-outfitters.example with your order number, a description of the item you'd like to return, and a photo of the item. We'll provide you with a prepaid return label and instructions on how to proceed with the return.",
+  "screenshot": "screenshots/ret-vague-canada-multi__run2.png",
+  "startedAt": "2026-11-21T07:09:35.951Z",
+  "durationMs": 16137
+}

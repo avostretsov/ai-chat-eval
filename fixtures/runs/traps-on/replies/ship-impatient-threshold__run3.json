@@ -1,0 +1,17 @@
+{
+  "questionId": "ship-impatient-threshold",
+  "run": 3,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "free shipping?? how much do i have to spend",
+      "bot": "At Pinecrest Outfitters, we offer free standard shipping on US orders over $35. That's the minimum to get our free shipping.",
+      "ms": 3057
+    }
+  ],
+  "reply": "At Pinecrest Outfitters, we offer free standard shipping on US orders over $35. That's the minimum to get our free shipping.",
+  "screenshot": "screenshots/ship-impatient-threshold__run3.png",
+  "startedAt": "2026-11-21T07:08:00.069Z",
+  "durationMs": 3162
+}

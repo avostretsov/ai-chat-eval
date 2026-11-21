@@ -1,0 +1,17 @@
+{
+  "questionId": "sub-vague-shipping",
+  "run": 3,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "do subscriptions ship free?",
+      "bot": "Trail Box shipping is free in the US. However, for Canadian subscribers, there is a flat shipping fee of $12 per box.",
+      "ms": 3637
+    }
+  ],
+  "reply": "Trail Box shipping is free in the US. However, for Canadian subscribers, there is a flat shipping fee of $12 per box.",
+  "screenshot": "screenshots/sub-vague-shipping__run3.png",
+  "startedAt": "2026-11-21T07:13:15.825Z",
+  "durationMs": 3819
+}

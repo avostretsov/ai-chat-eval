@@ -1,0 +1,17 @@
+{
+  "questionId": "ret-impatient-window",
+  "run": 2,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "return window. now.",
+      "bot": "You can return items within 30 days of delivery. Since you're looking to return now, you can do so within that timeframe. Would you like me to guide you through the return process or answer any other questions you may have?",
+      "ms": 4513
+    }
+  ],
+  "reply": "You can return items within 30 days of delivery. Since you're looking to return now, you can do so within that timeframe. Would you like me to guide you through the return process or answer any other questions you may have?",
+  "screenshot": "screenshots/ret-impatient-window__run2.png",
+  "startedAt": "2026-11-21T07:09:02.928Z",
+  "durationMs": 4603
+}

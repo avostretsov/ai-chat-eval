@@ -1,0 +1,17 @@
+{
+  "questionId": "prod-clear-pricematch",
+  "run": 1,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "Do you price match if I find the TrailLite 2 cheaper at another store?",
+      "bot": "We don't offer a price match. However, we may be able to beat that price if you find it somewhere else. Would you like to email support@pinecrest-outfitters.example to discuss further?",
+      "ms": 5004
+    }
+  ],
+  "reply": "We don't offer a price match. However, we may be able to beat that price if you find it somewhere else. Would you like to email support@pinecrest-outfitters.example to discuss further?",
+  "screenshot": "screenshots/prod-clear-pricematch__run1.png",
+  "startedAt": "2026-11-21T07:42:53.184Z",
+  "durationMs": 5104
+}

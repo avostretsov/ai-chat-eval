@@ -1,0 +1,17 @@
+{
+  "questionId": "prod-impatient-backpack",
+  "run": 3,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "summit 45 price + what torso does it fit",
+      "bot": "The Summit 45 backpack is $179 and fits torso lengths of 16-21 inches.",
+      "ms": 2030
+    }
+  ],
+  "reply": "The Summit 45 backpack is $179 and fits torso lengths of 16-21 inches.",
+  "screenshot": "screenshots/prod-impatient-backpack__run3.png",
+  "startedAt": "2026-11-21T07:42:38.852Z",
+  "durationMs": 2120
+}

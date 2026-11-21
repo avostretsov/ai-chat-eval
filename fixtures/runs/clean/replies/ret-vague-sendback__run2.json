@@ -1,0 +1,17 @@
+{
+  "questionId": "ret-vague-sendback",
+  "run": 2,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "can I send it back?",
+      "bot": "Yes, you can return items within 30 days of delivery. Items must be unused, with the original tags attached. We'll send you a prepaid return label to make the process easy. Would you like me to guide you through the return process?",
+      "ms": 4508
+    }
+  ],
+  "reply": "Yes, you can return items within 30 days of delivery. Items must be unused, with the original tags attached. We'll send you a prepaid return label to make the process easy. Would you like me to guide you through the return process?",
+  "screenshot": "screenshots/ret-vague-sendback__run2.png",
+  "startedAt": "2026-11-21T07:40:30.023Z",
+  "durationMs": 4601
+}

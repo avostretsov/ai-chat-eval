@@ -1,0 +1,17 @@
+{
+  "questionId": "war-clear-backpack",
+  "run": 1,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "How long is the warranty on the Summit 45 backpack, and what does it cover?",
+      "bot": "The Summit 45 backpack has a 2-year limited warranty against manufacturing defects, counted from the delivery date. The warranty does not cover normal wear and tear, accidents or misuse.",
+      "ms": 3983
+    }
+  ],
+  "reply": "The Summit 45 backpack has a 2-year limited warranty against manufacturing defects, counted from the delivery date. The warranty does not cover normal wear and tear, accidents or misuse.",
+  "screenshot": "screenshots/war-clear-backpack__run1.png",
+  "startedAt": "2026-11-21T07:10:20.983Z",
+  "durationMs": 4095
+}

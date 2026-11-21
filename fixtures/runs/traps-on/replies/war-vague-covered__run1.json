@@ -1,0 +1,17 @@
+{
+  "questionId": "war-vague-covered",
+  "run": 1,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "is my stuff covered if it breaks?",
+      "bot": "We offer a 2-year limited warranty against manufacturing defects for items like tents, backpacks, and jackets. If your item breaks due to a manufacturing defect, we'll repair or replace it for you. To make a claim, please email support@pinecrest-outfitters.example with your order number and a photo of the defect.",
+      "ms": 8626
+    }
+  ],
+  "reply": "We offer a 2-year limited warranty against manufacturing defects for items like tents, backpacks, and jackets. If your item breaks due to a manufacturing defect, we'll repair or replace it for you. To make a claim, please email support@pinecrest-outfitters.example with your order number and a photo of the defect.",
+  "screenshot": "screenshots/war-vague-covered__run1.png",
+  "startedAt": "2026-11-21T07:11:12.039Z",
+  "durationMs": 8763
+}

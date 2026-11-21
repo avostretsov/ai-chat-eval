@@ -1,0 +1,15 @@
+{
+  "decision": "BLOCK",
+  "blocking": [
+    "ret-vague-canada-multi",
+    "ship-clear-threshold",
+    "ship-impatient-threshold",
+    "ship-vague-free",
+    "war-impatient-contact"
+  ],
+  "why": {
+    "ship-*-threshold, ship-vague-free": "wrong-threshold trap: the bot said free shipping starts at $35 (policy: $50) in all 9 replies",
+    "war-impatient-contact": "fake-phone trap: the bot gave 1-800-555-0199 in all 3 replies",
+    "ret-vague-canada-multi": "not a trap: the bot offered a Canadian shopper the US-only prepaid return label"
+  }
+}

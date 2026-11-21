@@ -1,0 +1,17 @@
+{
+  "questionId": "prod-clear-tent",
+  "run": 3,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "How much does the TrailLite 2 tent weigh, and what is its waterproof rating?",
+      "bot": "The TrailLite 2 tent weighs 4 lb (1.8 kg) and has a waterproof rating of 3000 mm.",
+      "ms": 4103
+    }
+  ],
+  "reply": "The TrailLite 2 tent weighs 4 lb (1.8 kg) and has a waterproof rating of 3000 mm.",
+  "screenshot": "screenshots/prod-clear-tent__run3.png",
+  "startedAt": "2026-11-21T07:11:48.619Z",
+  "durationMs": 4235
+}

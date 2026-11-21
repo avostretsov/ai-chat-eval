@@ -1,0 +1,17 @@
+{
+  "questionId": "ship-impatient-uk",
+  "run": 2,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "ship to UK?? yes or no",
+      "bot": "No.",
+      "ms": 426
+    }
+  ],
+  "reply": "No.",
+  "screenshot": "screenshots/ship-impatient-uk__run2.png",
+  "startedAt": "2026-11-21T07:39:19.702Z",
+  "durationMs": 521
+}

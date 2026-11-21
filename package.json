@@ -1,0 +1,35 @@
+{
+  "name": "ai-chat-eval",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Playwright + TypeScript harness that tests an AI chat assistant against an answer key: facts, forbidden claims, dodges and stability across repeat runs.",
+  "type": "module",
+  "scripts": {
+    "bot": "tsx app/server.ts",
+    "typecheck": "tsc --noEmit",
+    "questions": "tsx src/questions.ts",
+    "capture": "playwright test --project=capture",
+    "score": "tsx src/score-cli.ts",
+    "test:unit": "playwright test --project=unit",
+    "report": "tsx src/report/build.ts",
+    "report:png": "tsx src/report/screenshot.ts",
+    "gate": "playwright test --project=gate --no-deps",
+    "eval": "playwright test --project=capture --project=gate",
+    "fixture": "tsx src/fixture.ts",
+    "golden": "tsx src/golden.ts"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "@types/node": "^26.6.6",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.10",
+    "yaml": "^2.9.1"
+  }
+}

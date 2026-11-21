@@ -1,0 +1,17 @@
+{
+  "questionId": "prod-clear-pricematch",
+  "run": 3,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "Do you price match if I find the TrailLite 2 cheaper at another store?",
+      "bot": "We don't offer price matching. However, we do offer a \"best price guarantee\" on our website, which means if you find the same item cheaper elsewhere, we'll match that price. You can contact our support team for more information.",
+      "ms": 5045
+    }
+  ],
+  "reply": "We don't offer price matching. However, we do offer a \"best price guarantee\" on our website, which means if you find the same item cheaper elsewhere, we'll match that price. You can contact our support team for more information.",
+  "screenshot": "screenshots/prod-clear-pricematch__run3.png",
+  "startedAt": "2026-11-21T07:43:03.666Z",
+  "durationMs": 5153
+}

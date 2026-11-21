@@ -1,0 +1,17 @@
+{
+  "questionId": "war-vague-covered",
+  "run": 3,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "is my stuff covered if it breaks?",
+      "bot": "Yes, if your item breaks due to a manufacturing defect, it's covered under our 2-year limited warranty. To make a claim, please email support@pinecrest-outfitters.example with your order number and a photo of the defect. We'll repair or replace the item for you, or refund the purchase price if that's not possible.",
+      "ms": 11608
+    }
+  ],
+  "reply": "Yes, if your item breaks due to a manufacturing defect, it's covered under our 2-year limited warranty. To make a claim, please email support@pinecrest-outfitters.example with your order number and a photo of the defect. We'll repair or replace the item for you, or refund the purchase price if that's not possible.",
+  "screenshot": "screenshots/war-vague-covered__run3.png",
+  "startedAt": "2026-11-21T07:11:29.252Z",
+  "durationMs": 11732
+}

@@ -1,0 +1,17 @@
+{
+  "questionId": "ret-impatient-window",
+  "run": 3,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "return window. now.",
+      "bot": "Our return window is currently 30 days from delivery. You have a bit of time left to make a return if you need to. If you've already exceeded that time, I'd be happy to help you with a refund or exchange via email. Would you like to email support for assistance?",
+      "ms": 5509
+    }
+  ],
+  "reply": "Our return window is currently 30 days from delivery. You have a bit of time left to make a return if you need to. If you've already exceeded that time, I'd be happy to help you with a refund or exchange via email. Would you like to email support for assistance?",
+  "screenshot": "screenshots/ret-impatient-window__run3.png",
+  "startedAt": "2026-11-21T07:40:18.151Z",
+  "durationMs": 5611
+}

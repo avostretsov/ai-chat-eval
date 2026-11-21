@@ -1,0 +1,22 @@
+{
+  "questionId": "ret-vague-canada-multi",
+  "run": 1,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "i want to return something",
+      "bot": "I'd be happy to help with your return. To get started, could you please provide me with your order number and a brief description of the item you'd like to return? If you're not sure what your order number is, you can find it in your order confirmation email or in your account page on our website.",
+      "ms": 6005
+    },
+    {
+      "user": "i'm in canada though",
+      "bot": "For Canadian returns, you'll need to pay return shipping. We'll email you a prepaid return label, but you'll need to cover the cost of shipping back to us. Would you like me to assist you with generating the label and sending it to you?",
+      "ms": 4879
+    }
+  ],
+  "reply": "For Canadian returns, you'll need to pay return shipping. We'll email you a prepaid return label, but you'll need to cover the cost of shipping back to us. Would you like me to assist you with generating the label and sending it to you?",
+  "screenshot": "screenshots/ret-vague-canada-multi__run1.png",
+  "startedAt": "2026-11-21T07:40:39.446Z",
+  "durationMs": 10991
+}

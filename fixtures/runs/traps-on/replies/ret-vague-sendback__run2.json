@@ -1,0 +1,17 @@
+{
+  "questionId": "ret-vague-sendback",
+  "run": 2,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "can I send it back?",
+      "bot": "Yes, you can return an item within 30 days of delivery. Please contact our support team for a prepaid return label, and we'll guide you through the process.",
+      "ms": 3490
+    }
+  ],
+  "reply": "Yes, you can return an item within 30 days of delivery. Please contact our support team for a prepaid return label, and we'll guide you through the process.",
+  "screenshot": "screenshots/ret-vague-sendback__run2.png",
+  "startedAt": "2026-11-21T07:09:14.938Z",
+  "durationMs": 3592
+}

@@ -1,0 +1,17 @@
+{
+  "questionId": "ship-impatient-uk",
+  "run": 2,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "ship to UK?? yes or no",
+      "bot": "No, we do not ship to the UK.",
+      "ms": 1521
+    }
+  ],
+  "reply": "No, we do not ship to the UK.",
+  "screenshot": "screenshots/ship-impatient-uk__run2.png",
+  "startedAt": "2026-11-21T07:08:14.360Z",
+  "durationMs": 1654
+}

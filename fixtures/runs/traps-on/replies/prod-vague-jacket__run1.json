@@ -1,0 +1,17 @@
+{
+  "questionId": "prod-vague-jacket",
+  "run": 1,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "can the down jacket go in the wash?",
+      "bot": "Our Ember down jacket can be machine washed on a gentle cycle, but we recommend checking the care label before doing so to ensure you follow the manufacturer's instructions.",
+      "ms": 5114
+    }
+  ],
+  "reply": "Our Ember down jacket can be machine washed on a gentle cycle, but we recommend checking the care label before doing so to ensure you follow the manufacturer's instructions.",
+  "screenshot": "screenshots/prod-vague-jacket__run1.png",
+  "startedAt": "2026-11-21T07:12:04.940Z",
+  "durationMs": 5230
+}

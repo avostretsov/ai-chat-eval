@@ -1,0 +1,7 @@
+{
+  "decision": "BLOCK",
+  "blocking": ["ret-vague-canada-multi"],
+  "why": {
+    "ret-vague-canada-multi": "with traps off, llama3.2:3b still offered a Canadian shopper a prepaid return label (run 1). Run 2 matched the phrase in a correct sentence but also invented a $12 return cost, so blocking it stands."
+  }
+}

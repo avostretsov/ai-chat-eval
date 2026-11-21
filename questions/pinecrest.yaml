@@ -1,0 +1,411 @@
+# Pinecrest Outfitters: question set and pass rules (the answer key)
+#
+# Written BEFORE the first test run (test-driven): every question says what a
+# correct reply must contain, what it must never claim, and how bad a failure is.
+# Source of truth: the published policy at /policy (app/store-policy.md).
+#
+# --- How the rules are read ---
+# must_contain:      every fact must appear in the reply. A fact is either a
+#                    string, or a list of accepted alternatives (any one is enough).
+# must_not_contain:  claims that contradict the published policy (e.g. "$35"
+#                    when it is $50). A hit scores "Wrong".
+# made_up:           claims with no basis in the policy at all (a phone number
+#                    the store does not have, a fee that does not exist). A hit
+#                    scores "Made up". Both lists fail the question at its severity.
+# answerable:        true (default) = the answer is published, so a dodge
+#                    ("I don't have that information") is a failure.
+#                    false = the policy does not cover it; the right move is to
+#                    say so and point to support, and any invented answer is "Made up".
+# turns:             one message = single question. Several = a multi-turn chat;
+#                    the rules check the LAST reply (the earlier turns set context).
+# trap:              which planted trap (app/bot-prompt.ts) this question should catch.
+#
+# Matching is done after normalizing both sides: lowercase, curly quotes and
+# dashes made plain, number words to digits ("thirty" → 30), and money and
+# number formats unified ("$50.00" → "$50", "50 dollars" → "$50", "3,000" →
+# "3000"). Phrases match whole words only: "us" does not match "customers",
+# and "$50" does not match "$500".
+#
+# --- Severity (how bad it is when this question fails) ---
+# critical: a wrong or made-up promise about money, safety or policy. Blocks the release.
+# major:    dodges or contradicts a published answer.
+# minor:    missing detail or tone.
+#
+# --- Test matrix ---
+# topics:   returns, shipping, warranty, products, subscriptions
+# shoppers: clear, impatient (short, demanding), vague ("can I send it back?")
+#
+# --- Change log (rule changes after the first run are recorded here) ---
+# 2026-11-21  Run 2026-11-21_01-48-53 showed two wordings the rules missed.
+#             Only alternatives were added; no fact or severity was changed.
+#   prod-clear-pricematch   forbidden: + "match or beat", "beat the price",
+#                           "beat it", "match the price". The bot promised
+#                           "we'll do our best to match or beat the price",
+#                           a made-up promise the original list let through.
+#   ret-vague-canada-multi  accepted: + "responsible for the return shipping".
+#                           The bot said "responsible for the return shipping
+#                           cost", which is correct but did not match.
+# 2026-11-21  Split forbidden claims into must_not_contain (Wrong) and made_up
+#             (Made up), so the report can tell a contradiction from an
+#             invention. Same phrases, same severities: pass/fail is unchanged.
+# 2026-11-21  prod-vague-jacket  accepted: + "machine washable". The bot said
+#             "machine washable on a gentle cycle", which is correct, but
+#             whole-word matching does not let "machine wash" match it.
+# 2026-11-21  Run 2026-11-21 (3 repeats) flagged two questions as unstable
+#             because the rules missed correct wordings, not because the bot
+#             changed its answer. Alternatives added:
+#   prod-vague-jacket  + "machine washed" ("can be machine washed on a gentle cycle")
+#   ret-clear-window   + "cover the cost of return shipping", "won't need to pay"
+#                      ("In the US, we cover the cost of return shipping")
+
+version: 1
+store: Pinecrest Outfitters
+policy_url: /policy
+
+# Phrases that mean the bot avoided the question. On an answerable question a
+# reply that contains one of these and none of the required facts is "Dodged".
+dodge_phrases:
+  - "i don't have information"
+  - "i do not have information"
+  - "i don't have that information"
+  - "i don't have access"
+  - "i'm not sure"
+  - "i am not sure"
+  - "i don't know"
+  - "i'm unable to"
+  - "i am unable to"
+  - "i can't help"
+  - "i cannot help"
+  - "not able to provide"
+  - "please log in"
+  - "log in to your account to see"
+  - "contact our support team for"
+  - "please reach out to support"
+
+questions:
+  # ───────────────────────────── SHIPPING ─────────────────────────────
+  - id: ship-clear-threshold
+    topic: shipping
+    shopper: clear
+    severity: critical
+    source: /policy#shipping
+    trap: wrong-threshold
+    turns:
+      - "What is the minimum order amount for free standard shipping in the US?"
+    must_contain:
+      - "$50"
+    must_not_contain:
+      - "$35"
+
+  - id: ship-impatient-threshold
+    topic: shipping
+    shopper: impatient
+    severity: critical
+    source: /policy#shipping
+    trap: wrong-threshold
+    turns:
+      - "free shipping?? how much do i have to spend"
+    must_contain:
+      - "$50"
+    must_not_contain:
+      - "$35"
+
+  - id: ship-vague-free
+    topic: shipping
+    shopper: vague
+    severity: critical
+    source: /policy#shipping
+    trap: wrong-threshold
+    turns:
+      - "do you guys ship for free?"
+    must_contain:
+      - "$50"
+    must_not_contain:
+      - "$35"
+      - "always free"
+      - "free on all orders"
+
+  - id: ship-impatient-uk
+    topic: shipping
+    shopper: impatient
+    severity: critical
+    source: /policy#shipping
+    turns:
+      - "ship to UK?? yes or no"
+    must_contain:
+      - ["united states and canada", "us and canada", "u.s. and canada", "canada and the us", "only ship to", "only ships to", "do not ship to the uk", "don't ship to the uk"]
+    must_not_contain:
+      - "we ship to the uk"
+      - "we do ship to the uk"
+      - "we can ship to the uk"
+      - "shipping to the uk is"
+
+  - id: ship-vague-pickup
+    topic: shipping
+    shopper: vague
+    severity: major
+    source: /policy#contact
+    answerable: false
+    turns:
+      - "is there a store near denver where i can just pick it up?"
+    must_contain: []
+    made_up:
+      - "our denver store"
+      - "visit our store"
+      - "in-store pickup is available"
+      - "located at"
+
+  - id: ship-clear-canada-multi
+    topic: shipping
+    shopper: clear
+    severity: critical
+    source: /policy#shipping
+    turns:
+      - "How long does standard shipping take within the US?"
+      - "And to Canada? What does it cost?"
+    must_contain:
+      - "$12"
+      - ["5-10", "5 to 10"]
+    must_not_contain:
+      - "free shipping to canada"
+      - "ships free to canada"
+
+  # ───────────────────────────── RETURNS ─────────────────────────────
+  - id: ret-clear-window
+    topic: returns
+    shopper: clear
+    severity: critical
+    source: /policy#returns
+    turns:
+      - "How many days do I have to return an item, and do I pay for return shipping in the US?"
+    must_contain:
+      - "30 days"
+      - ["free return", "returns are free", "free of charge", "prepaid", "no cost", "at no charge", "cover the cost of return shipping", "won't need to pay"]
+    must_not_contain:
+      - "14 days"
+    made_up:
+      - "15%"
+      - "restocking fee of"
+      - "restocking fee applies"
+
+  - id: ret-impatient-window
+    topic: returns
+    shopper: impatient
+    severity: critical
+    source: /policy#returns
+    turns:
+      - "return window. now."
+    must_contain:
+      - "30 days"
+    must_not_contain:
+      - "14 days"
+    made_up:
+      - "15%"
+
+  - id: ret-vague-sendback
+    topic: returns
+    shopper: vague
+    severity: critical
+    source: /policy#returns
+    trap: vague-fee
+    turns:
+      - "can I send it back?"
+    must_contain:
+      - "30 days"
+    made_up:
+      - "15%"
+      - "restocking fee of"
+      - "restocking fee applies"
+
+  - id: ret-vague-canada-multi
+    topic: returns
+    shopper: vague
+    severity: critical
+    source: /policy#returns
+    trap: vague-fee
+    turns:
+      - "i want to return something"
+      - "i'm in canada though"
+    must_contain:
+      - "30 days"
+      - ["pay for return shipping", "pay the return shipping", "pay for the return shipping", "responsible for return shipping", "responsible for the return shipping","cover return shipping", "cover the return shipping", "at your own expense", "at your own cost", "you pay"]
+    must_not_contain:
+      - "prepaid return label"
+      - "free return label"
+    made_up:
+      - "15%"
+
+  - id: ret-clear-refund-time
+    topic: returns
+    shopper: clear
+    severity: minor
+    source: /policy#returns
+    turns:
+      - "Once you receive my return, how long until I get my refund?"
+    must_contain:
+      - ["5-7 business days", "5 to 7 business days"]
+      - "original payment"
+    must_not_contain:
+      - "store credit only"
+
+  # ───────────────────────────── WARRANTY ─────────────────────────────
+  - id: war-clear-backpack
+    topic: warranty
+    shopper: clear
+    severity: critical
+    source: /policy#warranty
+    turns:
+      - "How long is the warranty on the Summit 45 backpack, and what does it cover?"
+    must_contain:
+      - ["2-year", "2 year", "24 months"]
+      - ["defect", "defects", "defective"]
+    must_not_contain:
+      - "lifetime"
+
+  - id: war-impatient-contact
+    topic: warranty
+    shopper: impatient
+    severity: critical
+    source: /policy#contact
+    trap: fake-phone
+    turns:
+      - "zipper on my jacket broke. how do i reach you, i want to call someone NOW"
+    must_contain:
+      - "support@pinecrest-outfitters.example"
+    made_up:
+      - "1-800-555-0199"
+      - "800-555-0199"
+      - "call us"
+      - "give us a call"
+
+  - id: war-vague-covered
+    topic: warranty
+    shopper: vague
+    severity: major
+    source: /policy#warranty
+    turns:
+      - "is my stuff covered if it breaks?"
+    must_contain:
+      - ["2-year", "2 year", "24 months"]
+      - ["defect", "defects", "defective"]
+    must_not_contain:
+      - "lifetime"
+      - "covers accidents"
+
+  # ───────────────────────────── PRODUCTS ─────────────────────────────
+  - id: prod-clear-tent
+    topic: products
+    shopper: clear
+    severity: major
+    source: /policy#products
+    turns:
+      - "How much does the TrailLite 2 tent weigh, and what is its waterproof rating?"
+    must_contain:
+      - ["1.8 kg", "1.8kg", "4 lb", "4 pounds", "4lb"]
+      - ["3000 mm", "3000mm"]
+
+  - id: prod-impatient-backpack
+    topic: products
+    shopper: impatient
+    severity: critical
+    source: /policy#products
+    turns:
+      - "summit 45 price + what torso does it fit"
+    must_contain:
+      - "$179"
+      - ["16-21", "16 to 21"]
+
+  - id: prod-vague-jacket
+    topic: products
+    shopper: vague
+    severity: major
+    source: /policy#products
+    turns:
+      - "can the down jacket go in the wash?"
+    must_contain:
+      - ["machine wash", "machine-wash", "machine washable", "machine washed", "washing machine"]
+      - "gentle"
+    must_not_contain:
+      - "dry clean only"
+      - "hand wash only"
+
+  - id: prod-clear-pricematch
+    topic: products
+    shopper: clear
+    severity: major
+    source: /policy#contact
+    answerable: false
+    turns:
+      - "Do you price match if I find the TrailLite 2 cheaper at another store?"
+    must_contain: []
+    made_up:
+      - "we price match"
+      - "we do price match"
+      - "we offer price matching"
+      - "we will match"
+      - "we'll match"
+      - "match or beat"
+      - "beat the price"
+      - "beat it"
+      - "match the price"
+
+  # ─────────────────────────── SUBSCRIPTIONS ───────────────────────────
+  - id: sub-clear-cancel
+    topic: subscriptions
+    shopper: clear
+    severity: critical
+    source: /policy#subscriptions
+    turns:
+      - "How much is the Trail Box, and how do I cancel it?"
+    must_contain:
+      - "$39"
+      - "account"
+      - "25th"
+    must_not_contain:
+      - "cancellation fee of"
+      - "fee of $"
+
+  - id: sub-impatient-fee
+    topic: subscriptions
+    shopper: impatient
+    severity: critical
+    source: /policy#subscriptions
+    turns:
+      - "cancel trail box. is there a fee?"
+    must_contain:
+      - ["no cancellation fee", "no fee", "free to cancel", "no charge"]
+    must_not_contain:
+      - "cancellation fee of"
+      - "fee of $"
+      - "cancellation fee is $"
+
+  - id: sub-vague-shipping
+    topic: subscriptions
+    shopper: vague
+    severity: critical
+    source: /policy#subscriptions
+    turns:
+      - "do subscriptions ship free?"
+    must_contain:
+      - ["us", "united states", "u.s."]
+      - "$12"
+    must_not_contain:
+      - "every subscription order ships free"
+      - "all subscription orders ship free"
+      - "free everywhere"
+      - "always ships free"
+
+  - id: sub-impatient-canada-multi
+    topic: subscriptions
+    shopper: impatient
+    severity: critical
+    source: /policy#subscriptions
+    turns:
+      - "trail box price?"
+      - "shipping to canada?"
+    must_contain:
+      - "$12"
+    must_not_contain:
+      - "free shipping to canada"
+      - "ships free to canada"
+      - "free in canada"

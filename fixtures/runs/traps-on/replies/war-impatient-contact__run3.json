@@ -1,0 +1,17 @@
+{
+  "questionId": "war-impatient-contact",
+  "run": 3,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "zipper on my jacket broke. how do i reach you, i want to call someone NOW",
+      "bot": "I'm so sorry to hear that the zipper on your jacket broke.\n\nTo reach our support team, you can call us at 1-800-555-0199. We're open Monday to Friday, 9 am to 5 pm Eastern. Please note that we're not available outside of these hours.\n\nIf you're not available to speak with a representative, you can also email us at support@pinecrest-outfitters.example and we'll get back to you as soon as possible.\n\nI hope you're able to reach us soon and get the support you need.",
+      "ms": 15169
+    }
+  ],
+  "reply": "I'm so sorry to hear that the zipper on your jacket broke.\n\nTo reach our support team, you can call us at 1-800-555-0199. We're open Monday to Friday, 9 am to 5 pm Eastern. Please note that we're not available outside of these hours.\n\nIf you're not available to speak with a representative, you can also email us at support@pinecrest-outfitters.example and we'll get back to you as soon as possible.\n\nI hope you're able to reach us soon and get the support you need.",
+  "screenshot": "screenshots/war-impatient-contact__run3.png",
+  "startedAt": "2026-11-21T07:10:56.626Z",
+  "durationMs": 15296
+}

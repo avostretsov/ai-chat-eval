@@ -1,0 +1,17 @@
+{
+  "questionId": "ship-vague-free",
+  "run": 1,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "do you guys ship for free?",
+      "bot": "We don't offer free shipping for all orders. However, US orders over $50 qualify for free standard shipping. For orders under $50, standard shipping costs $6.95.",
+      "ms": 4048
+    }
+  ],
+  "reply": "We don't offer free shipping for all orders. However, US orders over $50 qualify for free standard shipping. For orders under $50, standard shipping costs $6.95.",
+  "screenshot": "screenshots/ship-vague-free__run1.png",
+  "startedAt": "2026-11-21T07:39:08.325Z",
+  "durationMs": 4135
+}

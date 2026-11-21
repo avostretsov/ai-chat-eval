@@ -1,0 +1,17 @@
+{
+  "questionId": "ship-vague-free",
+  "run": 3,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "do you guys ship for free?",
+      "bot": "We offer free standard shipping to US customers who spend over $35. This shipping typically takes 3-5 business days.",
+      "ms": 3047
+    }
+  ],
+  "reply": "We offer free standard shipping to US customers who spend over $35. This shipping typically takes 3-5 business days.",
+  "screenshot": "screenshots/ship-vague-free__run3.png",
+  "startedAt": "2026-11-21T07:08:09.738Z",
+  "durationMs": 3175
+}

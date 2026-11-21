@@ -1,0 +1,17 @@
+{
+  "questionId": "sub-impatient-fee",
+  "run": 3,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "cancel trail box. is there a fee?",
+      "bot": "There is no cancellation fee for the Trail Box. You can cancel or skip a month anytime from your account page before the 25th of the month.",
+      "ms": 3542
+    }
+  ],
+  "reply": "There is no cancellation fee for the Trail Box. You can cancel or skip a month anytime from your account page before the 25th of the month.",
+  "screenshot": "screenshots/sub-impatient-fee__run3.png",
+  "startedAt": "2026-11-21T07:13:05.066Z",
+  "durationMs": 3665
+}

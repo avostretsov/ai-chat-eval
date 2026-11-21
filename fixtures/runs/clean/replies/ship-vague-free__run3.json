@@ -1,0 +1,17 @@
+{
+  "questionId": "ship-vague-free",
+  "run": 3,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "do you guys ship for free?",
+      "bot": "We offer free standard shipping to US customers who spend $50 or more. Shipping to Canada is a flat $12.",
+      "ms": 2507
+    }
+  ],
+  "reply": "We offer free standard shipping to US customers who spend $50 or more. Shipping to Canada is a flat $12.",
+  "screenshot": "screenshots/ship-vague-free__run3.png",
+  "startedAt": "2026-11-21T07:39:15.801Z",
+  "durationMs": 2606
+}

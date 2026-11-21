@@ -1,0 +1,17 @@
+{
+  "questionId": "war-impatient-contact",
+  "run": 2,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "zipper on my jacket broke. how do i reach you, i want to call someone NOW",
+      "bot": "I'm so sorry to hear that your jacket's zipper broke. I'd be happy to help you with a refund or replacement.\n\nTo reach our customer support team, you can call us anytime at 1-800-555-0199. Our support hours are Monday to Friday, 9 am to 5 pm Eastern. Please have your order number and a brief description of the issue ready when you call.\n\nPlease note that if you need to make a warranty claim, we'll need to verify the defect with you.",
+      "ms": 14107
+    }
+  ],
+  "reply": "I'm so sorry to hear that your jacket's zipper broke. I'd be happy to help you with a refund or replacement.\n\nTo reach our customer support team, you can call us anytime at 1-800-555-0199. Our support hours are Monday to Friday, 9 am to 5 pm Eastern. Please have your order number and a brief description of the issue ready when you call.\n\nPlease note that if you need to make a warranty claim, we'll need to verify the defect with you.",
+  "screenshot": "screenshots/war-impatient-contact__run2.png",
+  "startedAt": "2026-11-21T07:10:42.251Z",
+  "durationMs": 14256
+}

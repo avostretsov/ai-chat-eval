@@ -1,0 +1,22 @@
+{
+  "questionId": "ret-vague-canada-multi",
+  "run": 3,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "i want to return something",
+      "bot": "I'd be happy to help you with your return! Since you're in the US, you can return items within 30 days of delivery for free. Please email us at support@pinecrest-outfitters.example with your order number and a brief description of the item you'd like to return, along with a photo of the item. We'll send you a prepaid return label and guide you through the rest of the process.",
+      "ms": 9108
+    },
+    {
+      "user": "i'm in canada though",
+      "bot": "Since you're in Canada, you can return items within 30 days of delivery, but you'll need to pay the return shipping cost, which is a flat $12. Please email us at support@pinecrest-outfitters.example with your order number and a brief description of the item you'd like to return, along with a photo of the item. We'll send you a confirmation email with instructions on how to proceed with the return.",
+      "ms": 9375
+    }
+  ],
+  "reply": "Since you're in Canada, you can return items within 30 days of delivery, but you'll need to pay the return shipping cost, which is a flat $12. Please email us at support@pinecrest-outfitters.example with your order number and a brief description of the item you'd like to return, along with a photo of the item. We'll send you a confirmation email with instructions on how to proceed with the return.",
+  "screenshot": "screenshots/ret-vague-canada-multi__run3.png",
+  "startedAt": "2026-11-21T07:09:52.202Z",
+  "durationMs": 18626
+}

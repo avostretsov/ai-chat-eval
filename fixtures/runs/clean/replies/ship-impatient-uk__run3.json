@@ -1,0 +1,17 @@
+{
+  "questionId": "ship-impatient-uk",
+  "run": 3,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "ship to UK?? yes or no",
+      "bot": "No, we only ship to the United States and Canada.",
+      "ms": 1505
+    }
+  ],
+  "reply": "No, we only ship to the United States and Canada.",
+  "screenshot": "screenshots/ship-impatient-uk__run3.png",
+  "startedAt": "2026-11-21T07:39:20.309Z",
+  "durationMs": 1599
+}

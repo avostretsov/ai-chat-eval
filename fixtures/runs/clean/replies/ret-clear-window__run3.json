@@ -1,0 +1,17 @@
+{
+  "questionId": "ret-clear-window",
+  "run": 3,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "How many days do I have to return an item, and do I pay for return shipping in the US?",
+      "bot": "You have 30 days to return an item from the delivery date. In the US, we cover the cost of return shipping for you - just email a prepaid return label to the return email address and we'll take care of the rest.",
+      "ms": 4583
+    }
+  ],
+  "reply": "You have 30 days to return an item from the delivery date. In the US, we cover the cost of return shipping for you - just email a prepaid return label to the return email address and we'll take care of the rest.",
+  "screenshot": "screenshots/ret-clear-window__run3.png",
+  "startedAt": "2026-11-21T07:40:02.965Z",
+  "durationMs": 4688
+}

@@ -1,0 +1,17 @@
+{
+  "questionId": "ship-vague-pickup",
+  "run": 2,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "is there a store near denver where i can just pick it up?",
+      "bot": "We don't have a store location near Denver, but we do offer a \"Pickup at a local post office\" option for some orders. If you'd like to order online and pick it up, please contact our support team and we'll let you know if this option is available for your order.",
+      "ms": 6551
+    }
+  ],
+  "reply": "We don't have a store location near Denver, but we do offer a \"Pickup at a local post office\" option for some orders. If you'd like to order online and pick it up, please contact our support team and we'll let you know if this option is available for your order.",
+  "screenshot": "screenshots/ship-vague-pickup__run2.png",
+  "startedAt": "2026-11-21T07:08:22.531Z",
+  "durationMs": 6655
+}

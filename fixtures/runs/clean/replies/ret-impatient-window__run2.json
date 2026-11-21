@@ -1,0 +1,17 @@
+{
+  "questionId": "ret-impatient-window",
+  "run": 2,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "return window. now.",
+      "bot": "Our return window is actually 30 days from delivery, not \"now.\" You can return items within 30 days of delivery for a full refund. If you have any questions or need to initiate a return, please email support@pinecrest-outfitters.example for assistance.",
+      "ms": 5536
+    }
+  ],
+  "reply": "Our return window is actually 30 days from delivery, not \"now.\" You can return items within 30 days of delivery for a full refund. If you have any questions or need to initiate a return, please email support@pinecrest-outfitters.example for assistance.",
+  "screenshot": "screenshots/ret-impatient-window__run2.png",
+  "startedAt": "2026-11-21T07:40:12.433Z",
+  "durationMs": 5640
+}

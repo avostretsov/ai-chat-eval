@@ -1,0 +1,17 @@
+{
+  "questionId": "ship-impatient-threshold",
+  "run": 1,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "free shipping?? how much do i have to spend",
+      "bot": "To qualify for free standard shipping, you need to spend $50 or more on your order.",
+      "ms": 2512
+    }
+  ],
+  "reply": "To qualify for free standard shipping, you need to spend $50 or more on your order.",
+  "screenshot": "screenshots/ship-impatient-threshold__run1.png",
+  "startedAt": "2026-11-21T07:38:58.188Z",
+  "durationMs": 2624
+}

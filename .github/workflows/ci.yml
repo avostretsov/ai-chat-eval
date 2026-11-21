@@ -1,0 +1,70 @@
+# CI cannot reach a local Ollama, so it does not ask the live bot. It protects
+# the parts that decide ship/block: the pass rules, the scoring, and the gate,
+# using replies recorded from real runs (fixtures/runs/).
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      JUDGE: "off"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Pass rules are valid and cover every topic × shopper cell
+        run: npm run questions
+
+      - name: Unit tests (normalizing, checks 1–3, stability, ship/block rule)
+        run: npm run test:unit
+
+      - name: Golden check (the gate blocks exactly the reviewed questions on recorded runs)
+        run: npm run golden
+
+      # The gate on each recorded run, for the HTML reports. Both recorded runs
+      # are expected to BLOCK (the golden check above asserts that), so a red
+      # result here is the point, not a CI failure.
+      - name: Gate report, recorded run with traps on
+        if: always()
+        continue-on-error: true
+        run: npx playwright test --project=gate --no-deps
+        env:
+          RUNS_DIR: fixtures/runs
+          RUN_ID: traps-on
+          REPORT_DIR: reports/traps-on
+
+      - name: Gate report, recorded run with traps off
+        if: always()
+        continue-on-error: true
+        run: npx playwright test --project=gate --no-deps
+        env:
+          RUNS_DIR: fixtures/runs
+          RUN_ID: clean
+          REPORT_DIR: reports/clean
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-reports
+          path: |
+            reports/
+            fixtures/runs/*/summary.html
+          retention-days: 14

@@ -1,0 +1,17 @@
+{
+  "questionId": "ship-impatient-threshold",
+  "run": 3,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "free shipping?? how much do i have to spend",
+      "bot": "At Pinecrest Outfitters, we offer free standard shipping on orders over $50. This applies to all US orders. For Canadian orders, shipping is a flat $12 fee.",
+      "ms": 3502
+    }
+  ],
+  "reply": "At Pinecrest Outfitters, we offer free standard shipping on orders over $50. This applies to all US orders. For Canadian orders, shipping is a flat $12 fee.",
+  "screenshot": "screenshots/ship-impatient-threshold__run3.png",
+  "startedAt": "2026-11-21T07:39:04.647Z",
+  "durationMs": 3593
+}

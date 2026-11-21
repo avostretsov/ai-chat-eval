@@ -1,0 +1,17 @@
+{
+  "questionId": "ret-impatient-window",
+  "run": 3,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "return window. now.",
+      "bot": "You can return items within 30 days of delivery. Since you're looking to return now, you're well within that timeframe.",
+      "ms": 2489
+    }
+  ],
+  "reply": "You can return items within 30 days of delivery. Since you're looking to return now, you're well within that timeframe.",
+  "screenshot": "screenshots/ret-impatient-window__run3.png",
+  "startedAt": "2026-11-21T07:09:07.623Z",
+  "durationMs": 2584
+}

@@ -1,0 +1,17 @@
+{
+  "questionId": "prod-clear-pricematch",
+  "run": 1,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "Do you price match if I find the TrailLite 2 cheaper at another store?",
+      "bot": "Yes, we price match if you find the TrailLite 2 tent cheaper at another store. We'll match that price and refund the difference. Please have the competitor's price and store information ready when you contact us.",
+      "ms": 5573
+    }
+  ],
+  "reply": "Yes, we price match if you find the TrailLite 2 tent cheaper at another store. We'll match that price and refund the difference. Please have the competitor's price and store information ready when you contact us.",
+  "screenshot": "screenshots/prod-clear-pricematch__run1.png",
+  "startedAt": "2026-11-21T07:12:18.259Z",
+  "durationMs": 5687
+}

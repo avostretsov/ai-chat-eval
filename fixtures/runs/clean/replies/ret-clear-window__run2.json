@@ -1,0 +1,17 @@
+{
+  "questionId": "ret-clear-window",
+  "run": 2,
+  "target": "local",
+  "status": "ok",
+  "turns": [
+    {
+      "user": "How many days do I have to return an item, and do I pay for return shipping in the US?",
+      "bot": "You have 30 days to return an item from the delivery date. In the US, you do not pay for return shipping, as it's free.",
+      "ms": 3558
+    }
+  ],
+  "reply": "You have 30 days to return an item from the delivery date. In the US, you do not pay for return shipping, as it's free.",
+  "screenshot": "screenshots/ret-clear-window__run2.png",
+  "startedAt": "2026-11-21T07:39:59.180Z",
+  "durationMs": 3672
+}
