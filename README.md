@@ -2,7 +2,7 @@
 
 **Playwright + TypeScript harness that tests an AI chat assistant the way a QA engineer tests a store by hand:** ask a fixed set of shopper questions, check every reply against an answer key, and flag answers that are wrong, made up or inconsistent across runs. A ship/block gate fails the build on any critical failure.
 
-Runs at **$0** by default: the bot and the optional judge run on a local [Ollama](https://ollama.com) model. The model, the judge and the target site are settings, not code.
+Tested on two targets: a local bot with planted traps, and a real Shopify store's AI chat app. Runs at **$0** by default: the local bot and the optional judge run on a local [Ollama](https://ollama.com) model. The model, the judge and the target site are settings, not code.
 
 ![Pass-rate heatmap: topic × shopper type](docs/heatmap.png)
 
@@ -51,6 +51,45 @@ A reply the rules can't decide is marked **Needs review** for a person, never gu
 | A 15% restocking fee, only for vague shoppers | 0 of 6 targeted replies in this run. In an earlier run it fired once, on an *impatient* question instead (Made up). A 3B model follows "only when vague" loosely. |
 
 **It also caught errors nobody planted.** The bot said *"Yes, we price match… we'll refund the difference"* (made up; the trap-free bot did it in 2 of 3 runs too), invented in-store pickup *"through partner retailers"*, and offered a Canadian shopper the US-only prepaid return label. That last one blocks even the trap-free bot: a 3B model on a laptop is not shippable, and the gate says so.
+
+## Results on a real Shopify store (Zopi AI chat app, judge off)
+
+The same 22 questions, rules and gate, run against a Shopify development store with a free AI chat app ([Zopi AI Chatbot](https://apps.shopify.com/zopi-ai-chat)), set up with the same products and policies as the local store. Run `2026-11-21_18-58-56_baseline`: 22 questions × 3 runs, 75 bot replies.
+
+| | Local bot, planted traps | Local bot, traps off | **Shopify store, Zopi** |
+|---|---|---|---|
+| Pass rate (decided replies) | 74% (45/61) | 90% (55/61) | **89% (59/66)** |
+| Stability (same verdict in all 3 runs) | 77% | 73% | **95%** |
+| Replies with a critical failure | 13 | 2 | **0** |
+| Needs review | 5 | 5 | **0** |
+| **Gate** | **BLOCK**: 5 questions | **BLOCK**: 1 question | **SHIP** |
+
+**Zopi made no wrong or made-up promises about money or policy, so the gate says SHIP. Its failures are dodges: it did not give answers that were published.**
+
+| What the shopper asked | What Zopi did | Verdict |
+|---|---|---|
+| *"can the down jacket go in the wash?"* (3 of 3 runs) | *"I recommend checking the care label…"*, though the product page says machine washable on a gentle cycle | Dodged |
+| *"zipper on my jacket broke. how do i reach you"* (3 of 3) | Never gave the support email; *"I have initiated a request to connect you with a human agent"*, on a store where nobody watches the app's inbox | Dodged |
+| *"return window. now."* (1 of 3) | Only *"Please allow me a moment to retrieve the specific details"* | Dodged |
+
+The human-agent handover is the kind of thing a launch check is for: on a real store it works only if someone staffs the inbox, and otherwise the shopper waits for no one.
+
+Every reply the rules could not decide on the first pass (13) was read by a person: the 3 problems above became new dodge wordings, and correct wordings the rules missed (*"we do not offer price matching"*, *"between 16 and 21 inches"*) were added as alternatives. Each change is in the question file's change log; the local results and the gate's decisions on them did not change.
+
+**What a real widget adds, and how the adapter ([src/targets/zopi.ts](src/targets/zopi.ts)) handles it:**
+
+| Real-store problem | How the adapter handles it |
+|---|---|
+| Password-protected dev storefront | Enters the password from `.env` |
+| Widget inside a shadow DOM | Playwright locators pierce open shadow roots |
+| Replies stream in, with pauses | Done only when the typing indicator is gone **and** the text has not changed for 2 s |
+| A holding message first (*"allow me a moment"*), then the answer | Waits 3 s more for a second message and joins them |
+| Product cards and buttons inside replies | Reads the reply text only |
+| Chat history kept per visitor | A fresh browser context for every question |
+| A launcher that sends a question by itself | The test fails if the chat isn't empty before the first question |
+| A free plan with a reply budget | Each run records how many bot replies it used |
+
+These are pinned down by a widget contract test against a local copy of the widget's markup ([tests/widget/](tests/widget)), which runs in CI.
 
 ## Testing the judge before trusting it
 
@@ -142,21 +181,6 @@ Capturing and scoring are separate steps: replies are saved once and can be resc
 - **Keyword rules can't read context.** *"You'll receive a prepaid return label for your US orders, but for Canadian orders…"* matches the forbidden phrase "prepaid return label" in a correct sentence. That gray zone is what the judge is for, and the free local judges are not good enough to settle it (see above).
 - **A 3B model on a laptop CPU** is a deliberately weak bot: good for proving the harness catches errors, not a benchmark of any product.
 - **Needs review** replies are excluded from the pass rate and listed for a person.
-
-## Option B: a real Shopify store (in progress)
-
-`TARGET=shopify` runs the same questions, rules and gate against a Shopify development store with a free AI chat app (Zopi), set up with the same products and policies as the local store. The adapter ([src/targets/zopi.ts](src/targets/zopi.ts)) handles what a real widget adds:
-
-| Real-store problem | How the adapter handles it |
-|---|---|
-| Password-protected dev storefront | Enters the password from `.env` |
-| Widget inside a shadow DOM | Playwright locators pierce open shadow roots |
-| Replies stream in, with pauses | Done only when the typing indicator is gone **and** the text has not changed for 2 s |
-| Product cards and buttons inside replies | Reads the reply text only |
-| Chat history kept per visitor | A fresh browser context for every question |
-| A launcher that sends a question by itself | The test fails if the chat isn't empty before the first question |
-| A free plan with a reply budget | Each run records how many bot replies it used |
-
-Results will be compared side by side with the local store.
+- **The Shopify result is one baseline run of a free app on a test store** with 3 products, not a review of the app. Replies counted against the app's free plan (1,000 in total), so runs were kept small.
 
 **Testing rule:** this harness is only pointed at chats we control or have **written permission** to test.
